@@ -13,7 +13,6 @@ import {
   ChevronRight,
   GripVertical
 } from 'lucide-react';
-import MainLayout from '../components/layout/MainLayout';
 import { StatusBadge, PriorityBadge } from '../components/ui/StatusBadge';
 import api from '../lib/api';
 
@@ -112,7 +111,7 @@ const MaintenanceList = () => {
   }));
 
   return (
-    <MainLayout>
+    <>
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div>
@@ -287,7 +286,7 @@ const MaintenanceList = () => {
           )}
         </div>
       )}
-    </MainLayout>
+    </>
   );
 };
 

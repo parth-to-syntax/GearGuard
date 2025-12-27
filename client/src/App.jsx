@@ -1,6 +1,7 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
+import MainLayout from './components/layout/MainLayout';
 import LoginPage from './pages/auth/LoginPage';
 import SignupPage from './pages/auth/SignupPage';
 import ForgotPasswordPage from './pages/auth/ForgotPasswordPage';
@@ -23,6 +24,15 @@ import EquipmentForm from './pages/EquipmentForm';
 import CategoriesPage from './pages/CategoriesPage';
 import ReportsPage from './pages/ReportsPage';
 
+// Layout wrapper for protected routes
+const ProtectedLayout = () => (
+  <ProtectedRoute>
+    <MainLayout>
+      <Outlet />
+    </MainLayout>
+  </ProtectedRoute>
+);
+
 function App() {
   return (
     <AuthProvider>
@@ -34,179 +44,41 @@ function App() {
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/reset-password" element={<ResetPasswordPage />} />
           
-          {/* Protected Routes */}
-          <Route
-            path="/dashboard"
-            element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
-            }
-          />
-          
-          {/* Maintenance Routes */}
-          <Route
-            path="/maintenance"
-            element={
-              <ProtectedRoute>
-                <MaintenanceList />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/maintenance/board"
-            element={
-              <ProtectedRoute>
-                <MaintenanceKanban />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/maintenance/calendar"
-            element={
-              <ProtectedRoute>
-                <MaintenanceCalendar />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/maintenance/new"
-            element={
-              <ProtectedRoute>
-                <MaintenanceForm />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/maintenance/:id"
-            element={
-              <ProtectedRoute>
-                <MaintenanceDetail />
-              </ProtectedRoute>
-            }
-          />
+          {/* Protected Routes with MainLayout */}
+          <Route element={<ProtectedLayout />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            
+            {/* Maintenance Routes */}
+            <Route path="/maintenance" element={<MaintenanceList />} />
+            <Route path="/maintenance/board" element={<MaintenanceKanban />} />
+            <Route path="/maintenance/calendar" element={<MaintenanceCalendar />} />
+            <Route path="/maintenance/new" element={<MaintenanceForm />} />
+            <Route path="/maintenance/:id" element={<MaintenanceDetail />} />
 
-          {/* Reports Route */}
-          <Route
-            path="/reports"
-            element={
-              <ProtectedRoute>
-                <ReportsPage />
-              </ProtectedRoute>
-            }
-          />
+            {/* Reports Route */}
+            <Route path="/reports" element={<ReportsPage />} />
 
-          {/* Teams Routes */}
-          <Route
-            path="/teams"
-            element={
-              <ProtectedRoute>
-                <TeamsPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/teams/new"
-            element={
-              <ProtectedRoute>
-                <TeamForm />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/teams/:id"
-            element={
-              <ProtectedRoute>
-                <TeamDetail />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/teams/:id/edit"
-            element={
-              <ProtectedRoute>
-                <TeamForm />
-              </ProtectedRoute>
-            }
-          />
+            {/* Teams Routes */}
+            <Route path="/teams" element={<TeamsPage />} />
+            <Route path="/teams/new" element={<TeamForm />} />
+            <Route path="/teams/:id" element={<TeamDetail />} />
+            <Route path="/teams/:id/edit" element={<TeamForm />} />
 
-          {/* Work Centers Routes */}
-          <Route
-            path="/work-centers"
-            element={
-              <ProtectedRoute>
-                <WorkCentersPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/work-centers/new"
-            element={
-              <ProtectedRoute>
-                <WorkCenterForm />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/work-centers/:id"
-            element={
-              <ProtectedRoute>
-                <WorkCenterDetail />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/work-centers/:id/edit"
-            element={
-              <ProtectedRoute>
-                <WorkCenterForm />
-              </ProtectedRoute>
-            }
-          />
+            {/* Work Centers Routes */}
+            <Route path="/work-centers" element={<WorkCentersPage />} />
+            <Route path="/work-centers/new" element={<WorkCenterForm />} />
+            <Route path="/work-centers/:id" element={<WorkCenterDetail />} />
+            <Route path="/work-centers/:id/edit" element={<WorkCenterForm />} />
 
-          {/* Equipment Routes */}
-          <Route
-            path="/equipment"
-            element={
-              <ProtectedRoute>
-                <EquipmentPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/equipment/new"
-            element={
-              <ProtectedRoute>
-                <EquipmentForm />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/equipment/:id"
-            element={
-              <ProtectedRoute>
-                <EquipmentDetail />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/equipment/:id/edit"
-            element={
-              <ProtectedRoute>
-                <EquipmentForm />
-              </ProtectedRoute>
-            }
-          />
+            {/* Equipment Routes */}
+            <Route path="/equipment" element={<EquipmentPage />} />
+            <Route path="/equipment/new" element={<EquipmentForm />} />
+            <Route path="/equipment/:id" element={<EquipmentDetail />} />
+            <Route path="/equipment/:id/edit" element={<EquipmentForm />} />
 
-          {/* Categories Route */}
-          <Route
-            path="/categories"
-            element={
-              <ProtectedRoute>
-                <CategoriesPage />
-              </ProtectedRoute>
-            }
-          />
+            {/* Categories Route */}
+            <Route path="/categories" element={<CategoriesPage />} />
+          </Route>
           
           {/* Redirect root to dashboard */}
           <Route path="/" element={<Navigate to="/dashboard" replace />} />

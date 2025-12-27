@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import MainLayout from '../components/layout/MainLayout';
 import DataTable from '../components/ui/DataTable';
 import { useAuth } from '../context/AuthContext';
 import api from '../lib/api';
@@ -290,7 +289,7 @@ const CategoriesPage = () => {
   ];
 
   return (
-    <MainLayout>
+    <>
       <div className="space-y-6">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -494,7 +493,7 @@ const CategoriesPage = () => {
           </div>
         </div>
       )}
-    </MainLayout>
+    </>
   );
 };
 

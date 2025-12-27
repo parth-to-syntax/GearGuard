@@ -627,43 +627,53 @@ export const addComment = async (req, res) => {
  */
 export const getKanbanData = async (req, res) => {
   try {
-    const { teamId, technicianId } = req.query;
+    const { teamId, technicianId, workCenterId, priority, type } = req.query;
 
-    const where = {};
+    // Build role-based filter
+    let where = buildRoleFilter(req, {});
+    
     if (teamId) where.teamId = teamId;
     if (technicianId) where.assignedToId = technicianId;
+    if (workCenterId) where.workCenterId = workCenterId;
+    if (priority) where.priority = priority;
+    if (type) where.type = type;
 
-    // Define kanban columns with their statuses
-    const columns = [
-      { id: 'new', title: 'New Request', statuses: ['DRAFT', 'SUBMITTED'] },
-      { id: 'inProgress', title: 'In Progress', statuses: ['IN_REVIEW', 'APPROVED', 'IN_PROGRESS'] },
-      { id: 'onHold', title: 'On Hold', statuses: ['ON_HOLD', 'REOPENED'] },
-      { id: 'completed', title: 'Completed', statuses: ['COMPLETED'] }
-    ];
+    // Define status groups matching frontend statusColumns
+    const statusGroups = {
+      PENDING: ['PENDING', 'DRAFT', 'SUBMITTED'],
+      APPROVED: ['APPROVED', 'IN_REVIEW'],
+      IN_PROGRESS: ['IN_PROGRESS'],
+      ON_HOLD: ['ON_HOLD', 'REOPENED'],
+      COMPLETED: ['COMPLETED'],
+      CANCELLED: ['CANCELLED']
+    };
 
-    // Fetch requests for each column
-    const kanbanData = await Promise.all(
-      columns.map(async (column) => {
-        const requests = await prisma.maintenanceRequest.findMany({
-          where: {
-            ...where,
-            status: { in: column.statuses }
-          },
-          orderBy: [
-            { priority: 'desc' },
-            { createdAt: 'desc' }
-          ],
-          include: {
-            equipment: { select: { id: true, name: true, code: true } },
-            assignedTo: { select: { id: true, name: true, avatar: true } },
-            team: { select: { id: true, name: true } }
-          }
-        });
+    // Fetch all requests and group by status
+    const requests = await prisma.maintenanceRequest.findMany({
+      where,
+      orderBy: [
+        { priority: 'desc' },
+        { createdAt: 'desc' }
+      ],
+      include: {
+        equipment: { select: { id: true, name: true, code: true } },
+        workCenter: { select: { id: true, name: true } },
+        assignedTo: { select: { id: true, name: true, avatar: true } },
+        team: { select: { id: true, name: true } }
+      }
+    });
 
-        return {
-          ...column,
-          count: requests.length,
-          requests: requests.map(req => ({
+    // Group requests by status
+    const kanbanData = {};
+    Object.keys(statusGroups).forEach(groupKey => {
+      kanbanData[groupKey] = [];
+    });
+
+    requests.forEach(req => {
+      // Find which group this status belongs to
+      for (const [groupKey, statuses] of Object.entries(statusGroups)) {
+        if (statuses.includes(req.status)) {
+          kanbanData[groupKey].push({
             id: req.id,
             requestNumber: req.requestNumber,
             title: req.title,
@@ -671,16 +681,18 @@ export const getKanbanData = async (req, res) => {
             status: req.status,
             type: req.type,
             equipment: req.equipment,
+            workCenter: req.workCenter,
             assignedTo: req.assignedTo,
             team: req.team,
             scheduledDate: req.scheduledDate,
             dueDate: req.dueDate,
             isOverdue: req.dueDate && new Date(req.dueDate) < new Date() && 
                        !['COMPLETED', 'CANCELLED'].includes(req.status)
-          }))
-        };
-      })
-    );
+          });
+          break;
+        }
+      }
+    });
 
     res.json({
       success: true,
@@ -701,25 +713,36 @@ export const getKanbanData = async (req, res) => {
  */
 export const getCalendarEvents = async (req, res) => {
   try {
-    const { startDate, endDate, type } = req.query;
+    const { startDate, endDate, type, workCenterId } = req.query;
 
     // Build role-based filter
     let where = buildRoleFilter(req, {});
 
-    // Date range filter
+    // Date range filter - requests with scheduledDate or dueDate in range
     if (startDate && endDate) {
-      where.OR = [
+      where.AND = [
+        ...(where.AND || []),
         {
-          scheduledDate: {
-            gte: new Date(startDate),
-            lte: new Date(endDate)
-          }
-        },
-        {
-          dueDate: {
-            gte: new Date(startDate),
-            lte: new Date(endDate)
-          }
+          OR: [
+            {
+              scheduledDate: {
+                gte: new Date(startDate),
+                lte: new Date(endDate)
+              }
+            },
+            {
+              dueDate: {
+                gte: new Date(startDate),
+                lte: new Date(endDate)
+              }
+            },
+            {
+              reportedDate: {
+                gte: new Date(startDate),
+                lte: new Date(endDate)
+              }
+            }
+          ]
         }
       ];
     }
@@ -727,6 +750,11 @@ export const getCalendarEvents = async (req, res) => {
     // Filter by type (preventive/corrective)
     if (type) {
       where.type = type;
+    }
+
+    // Filter by work center
+    if (workCenterId) {
+      where.workCenterId = workCenterId;
     }
 
     const requests = await prisma.maintenanceRequest.findMany({
@@ -758,7 +786,8 @@ export const getCalendarEvents = async (req, res) => {
         start: req.scheduledDate || req.reportedDate,
         end: req.scheduledDate ? new Date(new Date(req.scheduledDate).getTime() + (req.estimatedHours || 1) * 60 * 60 * 1000) : null,
         allDay: !req.scheduledDate,
-        color,
+        backgroundColor: color,
+        borderColor: color,
         extendedProps: {
           requestNumber: req.requestNumber,
           status: req.status,

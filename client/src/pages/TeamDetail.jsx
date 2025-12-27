@@ -18,7 +18,6 @@ import {
   CheckCircle2,
   AlertCircle
 } from 'lucide-react';
-import MainLayout from '../components/layout/MainLayout';
 import { StatusBadge, PriorityBadge } from '../components/ui/StatusBadge';
 import api from '../lib/api';
 
@@ -132,30 +131,26 @@ const TeamDetail = () => {
 
   if (loading) {
     return (
-      <MainLayout>
-        <div className="animate-pulse space-y-6">
-          <div className="h-8 w-48 bg-[var(--steel-200)] rounded-xl" />
-          <div className="h-64 bg-[var(--steel-200)] rounded-2xl" />
-        </div>
-      </MainLayout>
+      <div className="animate-pulse space-y-6">
+        <div className="h-8 w-48 bg-[var(--steel-200)] rounded-xl" />
+        <div className="h-64 bg-[var(--steel-200)] rounded-2xl" />
+      </div>
     );
   }
 
   if (!team) {
     return (
-      <MainLayout>
-        <div className="text-center py-16">
-          <h3 className="text-lg font-semibold text-[var(--steel-900)] font-['Sora']">Team not found</h3>
-          <button onClick={() => navigate('/teams')} className="mt-4 text-[var(--brand-accent)] hover:text-[#e85a2a] font-['DM_Sans'] font-semibold">
-            Back to Teams
-          </button>
-        </div>
-      </MainLayout>
+      <div className="text-center py-16">
+        <h3 className="text-lg font-semibold text-[var(--steel-900)] font-['Sora']">Team not found</h3>
+        <button onClick={() => navigate('/teams')} className="mt-4 text-[var(--brand-accent)] hover:text-[#e85a2a] font-['DM_Sans'] font-semibold">
+          Back to Teams
+        </button>
+      </div>
     );
   }
 
   return (
-    <MainLayout>
+    <>
       {/* Header */}
       <div className="mb-6">
         <button
@@ -449,7 +444,7 @@ const TeamDetail = () => {
           </div>
         </div>
       )}
-    </MainLayout>
+    </>
   );
 };
 

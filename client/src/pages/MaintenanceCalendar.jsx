@@ -5,7 +5,6 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import api from '../lib/api';
-import MainLayout from '../components/layout/MainLayout';
 
 const priorityColors = {
   LOW: 'var(--steel-400)',
@@ -39,7 +38,7 @@ export default function MaintenanceCalendar() {
     }
   };
 
-  const fetchEvents = async (fetchInfo) => {
+  const fetchEvents = async (fetchInfo, successCallback, failureCallback) => {
     try {
       setLoading(true);
       const params = new URLSearchParams({
@@ -51,9 +50,12 @@ export default function MaintenanceCalendar() {
       if (filters.workCenterId) params.append('workCenterId', filters.workCenterId);
 
       const response = await api.get(`/maintenance-requests/calendar?${params}`);
-      setEvents(response.data.data || []);
+      const events = response.data.data || [];
+      setEvents(events);
+      successCallback(events);
     } catch (err) {
       console.error('Failed to load calendar events:', err);
+      failureCallback(err);
     } finally {
       setLoading(false);
     }
@@ -218,7 +220,6 @@ export default function MaintenanceCalendar() {
   };
 
   return (
-    <MainLayout>
     <div className="h-full flex flex-col">
       {/* Header */}
       <div className="flex justify-between items-center mb-4">
@@ -333,6 +334,5 @@ export default function MaintenanceCalendar() {
       {/* Event Detail Modal */}
       <EventDetailModal />
     </div>
-    </MainLayout>
   );
 }

@@ -13,7 +13,6 @@ import {
   Check,
   Building2
 } from 'lucide-react';
-import MainLayout from '../components/layout/MainLayout';
 import api from '../lib/api';
 
 // Validation schema
@@ -169,17 +168,15 @@ const TeamForm = () => {
 
   if (initialLoading) {
     return (
-      <MainLayout>
-        <div className="animate-pulse space-y-6">
-          <div className="h-8 w-48 bg-[var(--steel-200)] rounded" />
-          <div className="h-96 bg-[var(--steel-200)] rounded-2xl" />
-        </div>
-      </MainLayout>
+      <div className="animate-pulse space-y-6">
+        <div className="h-8 w-48 bg-[var(--steel-200)] rounded" />
+        <div className="h-96 bg-[var(--steel-200)] rounded-2xl" />
+      </div>
     );
   }
 
   return (
-    <MainLayout>
+    <>
       {/* Header */}
       <div className="mb-6">
         <button
@@ -405,7 +402,7 @@ const TeamForm = () => {
           </button>
         </div>
       </form>
-    </MainLayout>
+    </>
   );
 };
 

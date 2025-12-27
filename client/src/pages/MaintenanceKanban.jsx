@@ -7,7 +7,6 @@ import {
 } from '@hello-pangea/dnd';
 import { useAuth } from '../context/AuthContext';
 import api from '../lib/api';
-import MainLayout from '../components/layout/MainLayout';
 import StatusBadge from '../components/ui/StatusBadge';
 
 const statusColumns = [
@@ -227,7 +226,6 @@ export default function MaintenanceKanban() {
   };
 
   return (
-    <MainLayout>
     <div className="h-full flex flex-col">
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
@@ -376,6 +374,5 @@ export default function MaintenanceKanban() {
         </DragDropContext>
       )}
     </div>
-    </MainLayout>
   );
 }

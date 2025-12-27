@@ -9,7 +9,6 @@ import {
   AlertCircle,
   User
 } from 'lucide-react';
-import MainLayout from '../components/layout/MainLayout';
 import KPICard from '../components/dashboard/KPICard';
 import DataTable from '../components/ui/DataTable';
 import { StatusBadge, PriorityBadge } from '../components/ui/StatusBadge';
@@ -160,7 +159,7 @@ const Dashboard = () => {
   ];
 
   return (
-    <MainLayout>
+    <>
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
         <div>
@@ -275,7 +274,7 @@ const Dashboard = () => {
           onRowClick={(row) => navigate(`/maintenance/${row.id}`)}
         />
       </div>
-    </MainLayout>
+    </>
   );
 };
 

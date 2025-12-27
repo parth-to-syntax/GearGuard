@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import MainLayout from '../components/layout/MainLayout';
 import api from '../lib/api';
 
 export default function ReportsPage() {
@@ -221,7 +220,7 @@ export default function ReportsPage() {
   );
 
   return (
-    <MainLayout>
+    <>
       <div className="space-y-6">
         {/* Header */}
         <div className="flex justify-between items-start">
@@ -531,6 +530,6 @@ export default function ReportsPage() {
           </div>
         )}
       </div>
-    </MainLayout>
+    </>
   );
 }

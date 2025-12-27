@@ -18,7 +18,6 @@ import {
   MoreVertical,
   History
 } from 'lucide-react';
-import MainLayout from '../components/layout/MainLayout';
 import { StatusBadge, PriorityBadge } from '../components/ui/StatusBadge';
 import api from '../lib/api';
 import { useAuth } from '../context/AuthContext';
@@ -116,31 +115,27 @@ const MaintenanceDetail = () => {
 
   if (loading) {
     return (
-      <MainLayout>
-        <div className="animate-pulse space-y-6">
-          <div className="h-8 bg-[var(--steel-200)] rounded-xl w-1/3" />
-          <div className="h-32 bg-[var(--steel-200)] rounded-2xl" />
-          <div className="h-64 bg-[var(--steel-200)] rounded-2xl" />
-        </div>
-      </MainLayout>
+      <div className="animate-pulse space-y-6">
+        <div className="h-8 bg-[var(--steel-200)] rounded-xl w-1/3" />
+        <div className="h-32 bg-[var(--steel-200)] rounded-2xl" />
+        <div className="h-64 bg-[var(--steel-200)] rounded-2xl" />
+      </div>
     );
   }
 
   if (!request) {
     return (
-      <MainLayout>
-        <div className="text-center py-12">
-          <AlertTriangle className="w-16 h-16 text-[var(--status-warning)] mx-auto mb-4" />
-          <h2 className="text-xl font-bold text-[var(--steel-900)] font-['Sora']">Request Not Found</h2>
-          <p className="text-[var(--steel-500)] mt-2 font-['DM_Sans']">The maintenance request you're looking for doesn't exist.</p>
-          <button
-            onClick={() => navigate('/maintenance')}
-            className="mt-4 px-5 py-2.5 bg-gradient-to-r from-[var(--brand-accent)] to-[#e85a2a] text-white rounded-xl hover:from-[#e85a2a] hover:to-[var(--brand-accent)] transition-all font-semibold font-['DM_Sans'] shadow-lg shadow-[var(--brand-accent)]/20"
-          >
-            Back to Maintenance
-          </button>
-        </div>
-      </MainLayout>
+      <div className="text-center py-12">
+        <AlertTriangle className="w-16 h-16 text-[var(--status-warning)] mx-auto mb-4" />
+        <h2 className="text-xl font-bold text-[var(--steel-900)] font-['Sora']">Request Not Found</h2>
+        <p className="text-[var(--steel-500)] mt-2 font-['DM_Sans']">The maintenance request you're looking for doesn't exist.</p>
+        <button
+          onClick={() => navigate('/maintenance')}
+          className="mt-4 px-5 py-2.5 bg-gradient-to-r from-[var(--brand-accent)] to-[#e85a2a] text-white rounded-xl hover:from-[#e85a2a] hover:to-[var(--brand-accent)] transition-all font-semibold font-['DM_Sans'] shadow-lg shadow-[var(--brand-accent)]/20"
+        >
+          Back to Maintenance
+        </button>
+      </div>
     );
   }
 
@@ -148,7 +143,7 @@ const MaintenanceDetail = () => {
   const config = statusConfig[request.status] || statusConfig.DRAFT;
 
   return (
-    <MainLayout>
+    <>
       {/* Header */}
       <div className="mb-6">
         <button
@@ -575,7 +570,7 @@ const MaintenanceDetail = () => {
           </div>
         </div>
       </div>
-    </MainLayout>
+    </>
   );
 };
 

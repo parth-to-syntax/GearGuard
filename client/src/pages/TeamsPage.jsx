@@ -13,7 +13,6 @@ import {
   UserPlus,
   Filter
 } from 'lucide-react';
-import MainLayout from '../components/layout/MainLayout';
 import api from '../lib/api';
 
 const TeamsPage = () => {
@@ -79,7 +78,7 @@ const TeamsPage = () => {
   };
 
   return (
-    <MainLayout>
+    <>
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
         <div>
@@ -265,7 +264,7 @@ const TeamsPage = () => {
           onClick={() => setMenuOpen(null)}
         />
       )}
-    </MainLayout>
+    </>
   );
 };
 

@@ -14,7 +14,6 @@ import {
   AlertCircle,
   Diamond
 } from 'lucide-react';
-import MainLayout from '../components/layout/MainLayout';
 import api from '../lib/api';
 import { useAuth } from '../context/AuthContext';
 
@@ -206,7 +205,7 @@ const MaintenanceForm = () => {
   ];
 
   return (
-    <MainLayout>
+    <>
       {/* Header */}
       <div className="mb-6">
         <button
@@ -600,7 +599,7 @@ const MaintenanceForm = () => {
           </button>
         </div>
       </form>
-    </MainLayout>
+    </>
   );
 };
 
