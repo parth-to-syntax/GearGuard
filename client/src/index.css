@@ -1,88 +1,109 @@
-/* GearGuard Design System v2.0 */
-/* Industrial Precision. Unwavering Reliability. */
+/* GearGuard Design System v3.0 - Glassmorphic Dark Theme */
+/* Applying visual styling from reference frontend */
 
-/* Typography - DM Sans for UI, Sora for headings - humanist, precise, industrial feel */
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Sora:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+/* Typography - Inter for modern, clean look */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
 
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: var(--surface-ground);
+  color: var(--text-primary);
+}
+
 /* ============================================
-   DESIGN TOKENS
-   Industrial color palette with precision accents
+   DESIGN TOKENS - Dark Glassmorphic Theme
    ============================================ */
 :root {
-  /* Core Brand Colors - Industrial Steel & Safety Orange */
-  --brand-primary: #1a1a2e;
-  --brand-accent: #ff6b35;
-  --brand-accent-hover: #ff8c5a;
-  --brand-accent-muted: rgba(255, 107, 53, 0.12);
+  /* Core Dark Background Colors */
+  --bg-dark-1: #0B0F1A;
+  --bg-dark-2: #0A0E14;
+
+  /* Keep existing client variable names, but map to dark theme */
+  --brand-primary: var(--bg-dark-1);
   
-  /* Neutral Steel Palette */
-  --steel-50: #f8f9fb;
-  --steel-100: #f1f3f6;
-  --steel-200: #e4e7ed;
-  --steel-300: #cdd3dc;
-  --steel-400: #9ba4b4;
-  --steel-500: #6b7688;
-  --steel-600: #4a5568;
-  --steel-700: #374151;
-  --steel-800: #1f2937;
-  --steel-900: #111827;
-  --steel-950: #0a0d14;
+  /* Text Colors */
+  --text-primary: rgba(255, 255, 255, 0.96);
+  --text-secondary: rgba(255, 255, 255, 0.74);
+  --text-muted: rgba(255, 255, 255, 0.54);
+
+  /* Neutral Scale (used across client via var(--steel-*) ) */
+  --steel-50: rgba(255, 255, 255, 0.03);
+  --steel-100: rgba(255, 255, 255, 0.05);
+  --steel-200: rgba(255, 255, 255, 0.08);
+  --steel-300: rgba(255, 255, 255, 0.12);
+  --steel-400: rgba(255, 255, 255, 0.38);
+  --steel-500: var(--text-muted);
+  --steel-600: var(--text-secondary);
+  --steel-700: rgba(255, 255, 255, 0.86);
+  --steel-800: rgba(255, 255, 255, 0.92);
+  --steel-900: var(--text-primary);
+  --steel-950: #ffffff;
   
-  /* Status Colors - Industrial Safety Standards */
+  /* Glassmorphic Card Colors (slightly more solid for data pages) */
+  --card-bg: rgba(255, 255, 255, 0.06);
+  --card-border: rgba(255, 255, 255, 0.10);
+  --nav-bg: rgba(255, 255, 255, 0.06);
+
+  /* Surfaces (used across client via var(--surface-*) ) */
+  --surface-ground: var(--bg-dark-1);
+  --surface-card: var(--card-bg);
+  --surface-elevated: rgba(255, 255, 255, 0.075);
+  --surface-overlay: rgba(0, 0, 0, 0.75);
+
+  /* Borders (used across client via var(--border-*) ) */
+  --border-subtle: var(--card-border);
+  --border-default: rgba(255, 255, 255, 0.10);
+  --border-strong: rgba(255, 255, 255, 0.15);
+  
+  /* Brand Accent - Blue */
+  --brand-accent: #3b82f6;
+  --brand-accent-hover: #2563eb;
+  --brand-accent-muted: rgba(59, 130, 246, 0.10);
+  
+  /* Status Colors */
   --status-success: #10b981;
-  --status-success-bg: rgba(16, 185, 129, 0.1);
+  --status-success-bg: rgba(16, 185, 129, 0.10);
   --status-success-border: rgba(16, 185, 129, 0.3);
   
   --status-warning: #f59e0b;
-  --status-warning-bg: rgba(245, 158, 11, 0.1);
+  --status-warning-bg: rgba(245, 158, 11, 0.10);
   --status-warning-border: rgba(245, 158, 11, 0.3);
   
   --status-danger: #ef4444;
-  --status-danger-bg: rgba(239, 68, 68, 0.1);
+  --status-danger-bg: rgba(239, 68, 68, 0.10);
   --status-danger-border: rgba(239, 68, 68, 0.3);
   
   --status-info: #3b82f6;
-  --status-info-bg: rgba(59, 130, 246, 0.1);
+  --status-info-bg: rgba(59, 130, 246, 0.10);
   --status-info-border: rgba(59, 130, 246, 0.3);
   
   /* Priority Colors */
-  --priority-critical: #dc2626;
+  --priority-critical: #ef4444;
   --priority-high: #f97316;
   --priority-medium: #eab308;
   --priority-low: #6b7280;
   
-  /* Surface & Depth */
-  --surface-ground: #f5f6f8;
-  --surface-card: #ffffff;
-  --surface-elevated: #ffffff;
-  --surface-overlay: rgba(10, 13, 20, 0.6);
-  
-  /* Borders & Dividers */
-  --border-subtle: rgba(0, 0, 0, 0.06);
-  --border-default: rgba(0, 0, 0, 0.1);
-  --border-strong: rgba(0, 0, 0, 0.15);
-  
-  /* Shadows - Soft industrial depth */
-  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
-  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.06);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.06), 0 2px 4px rgba(0, 0, 0, 0.04);
-  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.08), 0 4px 8px rgba(0, 0, 0, 0.04);
-  --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.06);
-  --shadow-glow: 0 0 24px rgba(255, 107, 53, 0.25);
+  /* Shadows - Dark Theme (calm, enterprise) */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 6px 18px rgba(0, 0, 0, 0.28);
+  --shadow-xl: 0 10px 26px rgba(0, 0, 0, 0.32);
+  --shadow-glow: 0 0 0 rgba(59, 130, 246, 0.0);
+  --shadow-neu: 0 10px 24px rgba(0, 0, 0, 0.35);
   
   /* Typography Scale */
-  --font-display: 'Sora', sans-serif;
-  --font-body: 'DM Sans', sans-serif;
+  --font-display: 'Inter', sans-serif;
+  --font-body: 'Inter', sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
   
-  /* Spacing Rhythm */
-  --space-unit: 4px;
-  
-  /* Border Radius - Industrial precision with subtle softness */
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 14px;
+  /* Border Radius - Softer, more modern */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
   --radius-xl: 20px;
   --radius-full: 9999px;
   
@@ -92,35 +113,6 @@
   --duration-fast: 150ms;
   --duration-normal: 250ms;
   --duration-slow: 400ms;
-}
-
-/* Dark Mode Variables */
-.dark {
-  --brand-primary: #0f0f1a;
-  --surface-ground: #0a0d14;
-  --surface-card: #151821;
-  --surface-elevated: #1c2029;
-  --surface-overlay: rgba(0, 0, 0, 0.75);
-  
-  --steel-50: #1c2029;
-  --steel-100: #252a36;
-  --steel-200: #2e3442;
-  --steel-300: #3d4556;
-  --steel-400: #5a6478;
-  --steel-500: #8892a4;
-  --steel-600: #a8b1c1;
-  --steel-700: #c5cbda;
-  --steel-800: #e1e5ec;
-  --steel-900: #f3f4f7;
-  --steel-950: #ffffff;
-  
-  --border-subtle: rgba(255, 255, 255, 0.06);
-  --border-default: rgba(255, 255, 255, 0.1);
-  --border-strong: rgba(255, 255, 255, 0.15);
-  
-  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
 }
 
 /* ============================================
@@ -138,42 +130,151 @@ html {
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   scroll-behavior: smooth;
+  background: var(--surface-ground);
 }
 
 body {
   font-family: var(--font-body);
   font-weight: 400;
+  font-size: 0.9375rem;
   line-height: 1.6;
-  color: var(--steel-800);
+  color: var(--text-primary);
   background: var(--surface-ground);
   min-height: 100vh;
+  letter-spacing: -0.005em;
+  display: flex;
+  flex-direction: column;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+/* ============================================
+   GLOBAL TYPOGRAPHY NORMALIZATION
+   (forces reference frontend look everywhere)
+   ============================================ */
+
+/* Force any leftover per-component font classes to use Inter */
+[class*="font-['DM_Sans']"],
+[class*="font-['Sora']"],
+[class*="font-['JetBrains_Mono']"],
+[class*="font-['JetBrains Mono']"] {
+  font-family: var(--font-body) !important;
+}
+
+/* Base text rhythm */
+p, li, label {
+  color: var(--text-secondary);
+}
+
+small {
+  color: var(--text-muted);
+}
+
+/* Links */
+a {
+  color: var(--text-secondary);
+  text-decoration-color: rgba(255, 255, 255, 0.18);
+}
+
+a:hover {
+  color: var(--text-primary);
+  text-decoration-color: rgba(255, 255, 255, 0.35);
+}
+
+/* Make native form controls match the dark theme by default */
+input, select, textarea, button {
+  font-family: var(--font-body);
+}
+
+input, select, textarea {
+  color: var(--text-primary);
+  font-size: 0.9375rem;
+  line-height: 1.4rem;
+}
+
+input::placeholder, textarea::placeholder {
+  color: var(--text-muted);
+}
+
+button {
+  font-size: 0.9375rem;
+  line-height: 1.4rem;
+  letter-spacing: -0.01em;
+}
+
+/* Tables */
+table {
+  color: var(--text-secondary);
+}
+
+th {
+  color: var(--text-secondary);
+  font-weight: 500;
+  letter-spacing: 0.05em;
+}
+
+td {
+  color: var(--text-secondary);
+}
+
+/* If any components still use white surfaces, soften them into "glass" */
+.bg-white\/95,
+.bg-white,
+.bg-white\/90 {
+  background-color: rgba(255, 255, 255, 0.06) !important;
+  border-color: var(--card-border) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Normalize common light text utilities into the dark theme */
+.text-gray-900,
+.text-slate-900,
+.text-neutral-900 {
+  color: var(--text-primary) !important;
+}
+
+.text-gray-700,
+.text-slate-700,
+.text-neutral-700,
+.text-gray-600,
+.text-slate-600,
+.text-neutral-600 {
+  color: var(--text-secondary) !important;
+}
+
+.text-gray-500,
+.text-slate-500,
+.text-neutral-500,
+.text-gray-400,
+.text-slate-400,
+.text-neutral-400 {
+  color: var(--text-muted) !important;
 }
 
 /* ============================================
    BACKGROUND PATTERNS & TEXTURES
-   Industrial grid pattern for depth
    ============================================ */
 .bg-industrial-grid {
-  background-color: var(--surface-ground);
-  background-image: 
-    linear-gradient(var(--border-subtle) 1px, transparent 1px),
-    linear-gradient(90deg, var(--border-subtle) 1px, transparent 1px);
-  background-size: 24px 24px;
+  background-color: var(--bg-dark-1);
 }
 
 .bg-industrial-dots {
-  background-color: var(--surface-ground);
-  background-image: radial-gradient(var(--steel-300) 1px, transparent 1px);
-  background-size: 20px 20px;
+  background-color: var(--bg-dark-1);
 }
 
-.bg-gradient-industrial {
-  background: 
-    linear-gradient(135deg, var(--surface-ground) 0%, var(--steel-100) 100%);
-}
+.bg-gradient-industrial { background: var(--surface-ground); }
 
-.bg-gradient-brand {
-  background: linear-gradient(135deg, var(--brand-primary) 0%, #2d2d44 100%);
+.bg-gradient-brand { background: var(--brand-accent); }
+
+/* Decorative background blobs - REMOVED per user request for flat design */
+.bg-decoration {
+  display: none;
 }
 
 /* ============================================
@@ -181,23 +282,23 @@ body {
    ============================================ */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-display);
-  font-weight: 600;
-  line-height: 1.2;
-  color: var(--steel-900);
-  letter-spacing: -0.02em;
+  font-weight: 500;
+  line-height: 1.25;
+  color: var(--text-primary);
+  letter-spacing: -0.03em;
 }
 
-h1 { font-size: 2.5rem; font-weight: 700; }
-h2 { font-size: 2rem; }
-h3 { font-size: 1.5rem; }
-h4 { font-size: 1.25rem; }
-h5 { font-size: 1.125rem; }
-h6 { font-size: 1rem; }
+h1 { font-size: 2.125rem; font-weight: 500; }
+h2 { font-size: 1.25rem; font-weight: 600; }
+h3 { font-size: 1.125rem; font-weight: 600; }
+h4 { font-size: 1rem; font-weight: 600; }
+h5 { font-size: 0.95rem; font-weight: 600; }
+h6 { font-size: 0.875rem; font-weight: 600; }
 
 .text-display {
   font-family: var(--font-display);
-  font-weight: 700;
-  letter-spacing: -0.03em;
+  font-weight: 600;
+  letter-spacing: -0.04em;
 }
 
 .text-mono {
@@ -205,6 +306,11 @@ h6 { font-size: 1rem; }
   font-size: 0.875em;
   letter-spacing: -0.02em;
 }
+
+/* Text Color Utilities */
+.text-primary { color: var(--text-primary); }
+.text-secondary { color: var(--text-secondary); }
+.text-muted { color: var(--text-muted); }
 
 /* ============================================
    ANIMATIONS
@@ -306,10 +412,147 @@ h6 { font-size: 1rem; }
 }
 
 /* ============================================
+   GLASSMORPHIC COMPONENTS
+   ============================================ */
+
+/* Glass Cards */
+.lux-card,
+.glass-card {
+  background: var(--surface-card);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: none;
+  transition: border-color var(--duration-normal) var(--ease-smooth),
+              background-color var(--duration-normal) var(--ease-smooth),
+              box-shadow var(--duration-normal) var(--ease-smooth);
+}
+
+.lux-card:hover,
+.glass-card:hover {
+  transform: none;
+  box-shadow: none;
+  border-color: var(--border-default);
+  background: var(--surface-card);
+}
+
+/* Navigation Bar */
+.nav-dark {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--surface-ground);
+  box-shadow: none;
+}
+
+/* ============================================
+   NAVBAR DENSITY / TEXT-ONLY MODE
+   (visual-only changes, no DOM removal)
+   ============================================ */
+
+/* Hide the logo mark, keep only the text brand */
+.gg-logo-mark {
+  display: flex !important;
+}
+
+/* Hide nav item icons, keep only text */
+.gg-nav-icon {
+  display: none !important;
+}
+
+/* Remove the “K” shortcut badge from navbar search (keep modal hints) */
+.gg-global-search-trigger kbd {
+  display: none !important;
+}
+
+/* Make logout less noisy: only show on hover/focus of user area */
+.gg-user-menu .gg-logout-btn {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(0);
+  transition: opacity var(--duration-fast) var(--ease-smooth);
+}
+
+.gg-user-menu:hover .gg-logout-btn,
+.gg-user-menu:focus-within .gg-logout-btn {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Inputs */
+.lux-input {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-md);
+  padding: 0.75rem 1rem;
+  transition: box-shadow var(--duration-normal) var(--ease-smooth), 
+              border-color var(--duration-normal) var(--ease-smooth);
+}
+
+.lux-input::placeholder {
+  color: var(--text-muted);
+}
+
+.lux-input:focus {
+  outline: none;
+  border-color: rgba(59, 130, 246, 0.40);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.12);
+}
+
+/* Buttons */
+.lux-btn,
+.neu-button {
+  background: #111622;
+  color: var(--text-primary);
+  border-radius: var(--radius-full);
+  box-shadow: var(--shadow-neu);
+  transition: background-color var(--duration-normal) var(--ease-smooth),
+              border-color var(--duration-normal) var(--ease-smooth),
+              box-shadow var(--duration-normal) var(--ease-smooth);
+  padding: 0.75rem 1.125rem;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-weight: 400;
+}
+
+.lux-btn:hover,
+.neu-button:hover {
+  transform: none;
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.38);
+}
+
+.lux-btn-primary,
+.neu-button-primary {
+  background: var(--brand-accent);
+  color: #ffffff;
+  border: none;
+  border-radius: var(--radius-full);
+  box-shadow: var(--shadow-md);
+  transition: filter var(--duration-normal) var(--ease-smooth),
+              box-shadow var(--duration-normal) var(--ease-smooth);
+  padding: 0.75rem 1.125rem;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-weight: 500;
+}
+
+.lux-btn-primary:hover,
+.neu-button-primary:hover {
+  transform: none;
+  background: var(--brand-accent-hover);
+  filter: none;
+  box-shadow: var(--shadow-lg);
+}
+
+/* ============================================
    UTILITY CLASSES
    ============================================ */
 .text-accent { color: var(--brand-accent); }
-.text-muted { color: var(--steel-500); }
+.text-muted { color: var(--text-muted); }
 .text-success { color: var(--status-success); }
 .text-warning { color: var(--status-warning); }
 .text-danger { color: var(--status-danger); }
@@ -319,7 +562,33 @@ h6 { font-size: 1rem; }
 
 .border-accent { border-color: var(--brand-accent); }
 
-.shadow-glow { box-shadow: var(--shadow-glow); }
+.shadow-glow { box-shadow: none; }
+
+/* Density: tighten common Tailwind paddings used in admin tables/cards */
+.glass-card.p-6,
+.lux-card.p-6 {
+  padding: 1.5rem !important;
+}
+
+/* DataTable density: reduce row/header height without changing JSX */
+.glass-card .px-6.py-4 {
+  padding: 0.75rem 1.5rem !important;
+}
+
+/* Remove decorative background blobs (data pages should feel flat) */
+.bg-blue-500\/5 { background-color: transparent !important; }
+.bg-cyan-500\/5 { background-color: transparent !important; }
+.bg-blue-600\/3 { background-color: transparent !important; }
+
+/* Fade In Animation */
+.fade-in {
+  animation: fadeInOnly 0.6s ease-out both;
+}
+
+@keyframes fadeInOnly {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
 
 /* Focus Visible for Accessibility */
 :focus-visible {
@@ -327,24 +596,24 @@ h6 { font-size: 1rem; }
   outline-offset: 2px;
 }
 
-/* Scrollbar Styling */
+/* Scrollbar Styling - Dark Theme */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--steel-100);
+  background: rgba(255, 255, 255, 0.05);
   border-radius: var(--radius-full);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--steel-300);
+  background: rgba(255, 255, 255, 0.15);
   border-radius: var(--radius-full);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--steel-400);
+  background: rgba(255, 255, 255, 0.25);
 }
 
 /* Selection */

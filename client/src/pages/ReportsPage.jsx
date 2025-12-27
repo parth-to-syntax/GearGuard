@@ -196,23 +196,23 @@ export default function ReportsPage() {
   ];
 
   const StatCard = ({ title, value, subtitle, trend, icon }) => (
-    <div className="bg-white rounded-2xl p-6 border border-[var(--border-subtle)]" style={{ boxShadow: 'var(--shadow-sm)' }}>
+    <div className="glass-card p-6" style={{ boxShadow: 'var(--shadow-sm)' }}>
       <div className="flex justify-between items-start mb-4">
         <span className="text-2xl">{icon}</span>
         {trend !== undefined && (
-          <span className={`text-sm font-semibold font-['DM_Sans'] ${trend >= 0 ? 'text-[var(--status-success)]' : 'text-[var(--status-danger)]'}`}>
+          <span className={`text-sm font-medium ${trend >= 0 ? 'text-[var(--status-success)]' : 'text-[var(--status-danger)]'}`}>
             {trend >= 0 ? '↑' : '↓'} {Math.abs(trend)}%
           </span>
         )}
       </div>
-      <p className="text-3xl font-bold text-[var(--steel-900)] font-['Sora']">{value}</p>
-      <p className="text-[var(--steel-500)] text-sm mt-1 font-['DM_Sans']">{title}</p>
-      {subtitle && <p className="text-[var(--steel-400)] text-xs mt-1 font-['DM_Sans']">{subtitle}</p>}
+      <p className="text-3xl font-semibold text-primary tracking-tight">{value}</p>
+      <p className="text-secondary text-sm mt-1">{title}</p>
+      {subtitle && <p className="text-muted text-xs mt-1">{subtitle}</p>}
     </div>
   );
 
   const ProgressBar = ({ value, max, color = 'blue' }) => (
-    <div className="w-full bg-[var(--steel-200)] rounded-full h-2">
+    <div className="w-full bg-[rgba(255,255,255,0.1)] rounded-full h-2">
       <div 
         className={`bg-${color}-500 h-2 rounded-full transition-all`}
         style={{ width: `${(value / max) * 100}%` }}
@@ -222,17 +222,17 @@ export default function ReportsPage() {
 
   return (
     <MainLayout>
-      <div className="space-y-6">
+      <div className="flex-1 flex flex-col space-y-6">
         {/* Header */}
         <div className="flex justify-between items-start">
           <div>
-            <h1 className="text-2xl font-bold text-[var(--steel-900)] font-['Sora']">Reports & Analytics</h1>
-            <p className="text-[var(--steel-500)] font-['DM_Sans']">Comprehensive maintenance insights</p>
+            <h1 className="text-2xl font-semibold text-primary tracking-tight">Reports & Analytics</h1>
+            <p className="text-secondary mt-1">Comprehensive maintenance insights</p>
           </div>
           <div className="flex gap-2">
             <button
               onClick={() => exportReport('csv')}
-              className="px-4 py-2.5 text-[var(--steel-600)] hover:text-[var(--steel-900)] border border-[var(--border-default)] rounded-xl flex items-center gap-2 font-semibold font-['DM_Sans'] hover:bg-[var(--steel-50)] transition-all"
+              className="px-4 py-2.5 text-secondary hover:text-primary border border-[var(--card-border)] rounded-xl flex items-center gap-2 font-medium hover:bg-[rgba(255,255,255,0.05)] transition-all"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
@@ -241,7 +241,7 @@ export default function ReportsPage() {
             </button>
             <button
               onClick={() => exportReport('pdf')}
-              className="px-4 py-2.5 bg-gradient-to-r from-[var(--brand-accent)] to-[#e85a2a] text-white rounded-xl flex items-center gap-2 font-semibold font-['DM_Sans'] hover:-translate-y-0.5 transition-all shadow-lg shadow-[var(--brand-accent)]/20"
+              className="lux-btn-primary flex items-center gap-2"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -252,32 +252,32 @@ export default function ReportsPage() {
         </div>
 
         {/* Filters */}
-        <div className="bg-white rounded-2xl p-4 border border-[var(--border-subtle)]" style={{ boxShadow: 'var(--shadow-sm)' }}>
+        <div className="glass-card p-4" style={{ boxShadow: 'var(--shadow-sm)' }}>
           <div className="flex flex-wrap gap-4 items-center">
             <div>
-              <label className="block text-xs text-[var(--steel-500)] mb-1 font-['DM_Sans']">Start Date</label>
+              <label className="block text-xs text-muted mb-1">Start Date</label>
               <input
                 type="date"
                 value={dateRange.startDate}
                 onChange={(e) => setDateRange(prev => ({ ...prev, startDate: e.target.value }))}
-                className="px-4 py-2.5 bg-[var(--steel-50)] border-2 border-transparent rounded-xl text-sm font-['DM_Sans'] focus:bg-white focus:border-[var(--brand-accent)] transition-all"
+                className="lux-input"
               />
             </div>
             <div>
-              <label className="block text-xs text-[var(--steel-500)] mb-1 font-['DM_Sans']">End Date</label>
+              <label className="block text-xs text-muted mb-1">End Date</label>
               <input
                 type="date"
                 value={dateRange.endDate}
                 onChange={(e) => setDateRange(prev => ({ ...prev, endDate: e.target.value }))}
-                className="px-4 py-2.5 bg-[var(--steel-50)] border-2 border-transparent rounded-xl text-sm font-['DM_Sans'] focus:bg-white focus:border-[var(--brand-accent)] transition-all"
+                className="lux-input"
               />
             </div>
             <div>
-              <label className="block text-xs text-[var(--steel-500)] mb-1 font-['DM_Sans']">Work Center</label>
+              <label className="block text-xs text-muted mb-1">Work Center</label>
               <select
                 value={filters.workCenterId}
                 onChange={(e) => setFilters(prev => ({ ...prev, workCenterId: e.target.value }))}
-                className="px-4 py-2.5 bg-[var(--steel-50)] border-2 border-transparent rounded-xl text-sm font-['DM_Sans'] focus:bg-white focus:border-[var(--brand-accent)] transition-all"
+                className="lux-input"
               >
                 <option value="">All Work Centers</option>
                 {workCenters.map(wc => (
@@ -286,11 +286,11 @@ export default function ReportsPage() {
               </select>
             </div>
             <div>
-              <label className="block text-xs text-[var(--steel-500)] mb-1 font-['DM_Sans']">Team</label>
+              <label className="block text-xs text-muted mb-1">Team</label>
               <select
                 value={filters.teamId}
                 onChange={(e) => setFilters(prev => ({ ...prev, teamId: e.target.value }))}
-                className="px-4 py-2.5 bg-[var(--steel-50)] border-2 border-transparent rounded-xl text-sm font-['DM_Sans'] focus:bg-white focus:border-[var(--brand-accent)] transition-all"
+                className="lux-input"
               >
                 <option value="">All Teams</option>
                 {teams.map(team => (
@@ -302,15 +302,15 @@ export default function ReportsPage() {
         </div>
 
         {/* Report Type Tabs */}
-        <div className="flex gap-2 border-b border-[var(--border-default)] pb-4">
+        <div className="flex gap-2 border-b border-[var(--card-border)] pb-4">
           {reportTypes.map(type => (
             <button
               key={type.id}
               onClick={() => setSelectedReport(type.id)}
-              className={`px-4 py-2.5 rounded-xl flex items-center gap-2 transition-all font-['DM_Sans'] ${
+              className={`px-4 py-2.5 rounded-xl flex items-center gap-2 transition-all font-medium ${
                 selectedReport === type.id
-                  ? 'bg-[var(--brand-accent-muted)] text-[var(--brand-accent)] font-semibold'
-                  : 'text-[var(--steel-600)] hover:bg-[var(--steel-100)]'
+                  ? 'bg-[rgba(59,130,246,0.1)] text-[var(--brand-accent)]'
+                  : 'text-secondary hover:bg-[rgba(255,255,255,0.05)]'
               }`}
             >
               <span>{type.icon}</span>
@@ -322,7 +322,7 @@ export default function ReportsPage() {
         {/* Report Content */}
         {loading ? (
           <div className="flex items-center justify-center py-12">
-            <div className="w-12 h-12 border-3 border-[var(--steel-200)] border-t-[var(--brand-accent)] rounded-full animate-spin"></div>
+            <div className="w-12 h-12 border-3 border-[var(--card-border)] border-t-[var(--brand-accent)] rounded-full animate-spin"></div>
           </div>
         ) : (
           <div className="space-y-6">
@@ -359,30 +359,30 @@ export default function ReportsPage() {
                 </div>
 
                 {/* Status Distribution */}
-                <div className="bg-white rounded-2xl p-6 border border-[var(--border-subtle)]" style={{ boxShadow: 'var(--shadow-sm)' }}>
-                  <h3 className="text-lg font-bold mb-4 font-['Sora'] text-[var(--steel-900)]">Request Status Distribution</h3>
+                <div className="glass-card p-6" style={{ boxShadow: 'var(--shadow-sm)' }}>
+                  <h3 className="text-lg font-semibold mb-4 text-primary">Request Status Distribution</h3>
                   <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-                    <div className="text-center p-4 bg-[var(--steel-50)] rounded-xl">
-                      <p className="text-2xl font-bold text-[var(--steel-600)] font-['Sora']">{reportData.pendingRequests}</p>
-                      <p className="text-sm text-[var(--steel-500)] font-['DM_Sans']">Pending</p>
+                    <div className="text-center p-4 bg-[rgba(255,255,255,0.05)] rounded-xl border border-[var(--card-border)]">
+                      <p className="text-2xl font-semibold text-secondary">{reportData.pendingRequests}</p>
+                      <p className="text-sm text-muted">Pending</p>
                     </div>
-                    <div className="text-center p-4 bg-[var(--status-warning-bg)] rounded-xl">
-                      <p className="text-2xl font-bold text-[var(--status-warning)] font-['Sora']">{reportData.inProgressRequests}</p>
-                      <p className="text-sm text-[var(--steel-500)] font-['DM_Sans']">In Progress</p>
+                    <div className="text-center p-4 bg-[rgba(245,158,11,0.1)] rounded-xl border border-[rgba(245,158,11,0.2)]">
+                      <p className="text-2xl font-semibold text-[var(--status-warning)]">{reportData.inProgressRequests}</p>
+                      <p className="text-sm text-muted">In Progress</p>
                     </div>
-                    <div className="text-center p-4 bg-[var(--status-success-bg)] rounded-xl">
-                      <p className="text-2xl font-bold text-[var(--status-success)] font-['Sora']">{reportData.completedRequests}</p>
-                      <p className="text-sm text-[var(--steel-500)] font-['DM_Sans']">Completed</p>
+                    <div className="text-center p-4 bg-[rgba(16,185,129,0.1)] rounded-xl border border-[rgba(16,185,129,0.2)]">
+                      <p className="text-2xl font-semibold text-[var(--status-success)]">{reportData.completedRequests}</p>
+                      <p className="text-sm text-muted">Completed</p>
                     </div>
-                    <div className="text-center p-4 bg-[var(--brand-accent-muted)] rounded-xl">
-                      <p className="text-2xl font-bold text-[var(--brand-accent)] font-['Sora']">{reportData.overdueRequests}</p>
-                      <p className="text-sm text-[var(--steel-500)] font-['DM_Sans']">Overdue</p>
+                    <div className="text-center p-4 bg-[rgba(239,68,68,0.1)] rounded-xl border border-[rgba(239,68,68,0.2)]">
+                      <p className="text-2xl font-semibold text-[var(--status-danger)]">{reportData.overdueRequests}</p>
+                      <p className="text-sm text-muted">Overdue</p>
                     </div>
-                    <div className="text-center p-4 bg-[var(--status-info-bg)] rounded-xl">
-                      <p className="text-2xl font-bold text-[var(--status-info)] font-['Sora']">
+                    <div className="text-center p-4 bg-[rgba(59,130,246,0.1)] rounded-xl border border-[rgba(59,130,246,0.2)]">
+                      <p className="text-2xl font-semibold text-[var(--status-info)]">
                         {Math.round((reportData.preventiveCount / reportData.totalRequests) * 100)}%
                       </p>
-                      <p className="text-sm text-[var(--steel-500)] font-['DM_Sans']">Preventive</p>
+                      <p className="text-sm text-muted">Preventive</p>
                     </div>
                   </div>
                 </div>
@@ -408,24 +408,24 @@ export default function ReportsPage() {
                   />
                 </div>
 
-                <div className="bg-white rounded-2xl p-6 border border-[var(--border-subtle)]" style={{ boxShadow: 'var(--shadow-sm)' }}>
-                  <h3 className="text-lg font-bold mb-4 font-['Sora'] text-[var(--steel-900)]">Top Equipment by Maintenance Requests</h3>
+                <div className="glass-card p-6" style={{ boxShadow: 'var(--shadow-sm)' }}>
+                  <h3 className="text-lg font-semibold mb-4 text-primary">Top Equipment by Maintenance Requests</h3>
                   <div className="space-y-4">
                     {reportData.topEquipmentByRequests.map((eq, index) => (
                       <div key={index} className="flex items-center gap-4">
-                        <span className="text-[var(--steel-400)] font-['JetBrains_Mono'] w-6">{index + 1}</span>
+                        <span className="text-muted font-mono w-6">{index + 1}</span>
                         <div className="flex-1">
                           <div className="flex justify-between mb-1">
-                            <span className="font-semibold text-[var(--steel-900)] font-['DM_Sans']">{eq.name}</span>
-                            <span className="text-sm text-[var(--steel-500)] font-['DM_Sans']">{eq.requests} requests</span>
+                            <span className="font-medium text-primary">{eq.name}</span>
+                            <span className="text-sm text-secondary">{eq.requests} requests</span>
                           </div>
-                          <div className="w-full bg-[var(--steel-200)] rounded-full h-2">
+                          <div className="w-full bg-[rgba(255,255,255,0.1)] rounded-full h-2">
                             <div 
                               className="bg-[var(--brand-accent)] h-2 rounded-full"
                               style={{ width: `${(eq.requests / reportData.topEquipmentByRequests[0].requests) * 100}%` }}
                             />
                           </div>
-                          <p className="text-xs text-[var(--steel-400)] mt-1 font-['DM_Sans']">{eq.downtime}h downtime</p>
+                          <p className="text-xs text-muted mt-1">{eq.downtime}h downtime</p>
                         </div>
                       </div>
                     ))}
@@ -436,26 +436,26 @@ export default function ReportsPage() {
 
             {selectedReport === 'team' && reportData && (
               <>
-                <div className="bg-white rounded-2xl p-6 border border-[var(--border-subtle)]" style={{ boxShadow: 'var(--shadow-sm)' }}>
-                  <h3 className="text-lg font-bold mb-4 font-['Sora'] text-[var(--steel-900)]">Team Performance</h3>
+                <div className="glass-card p-6" style={{ boxShadow: 'var(--shadow-sm)' }}>
+                  <h3 className="text-lg font-semibold mb-4 text-primary">Team Performance</h3>
                   <div className="overflow-x-auto">
                     <table className="w-full">
                       <thead>
-                        <tr className="border-b border-[var(--border-default)]">
-                          <th className="text-left py-3 px-4 text-sm font-semibold text-[var(--steel-500)] font-['Sora'] uppercase tracking-wide">Team</th>
-                          <th className="text-center py-3 px-4 text-sm font-semibold text-[var(--steel-500)] font-['Sora'] uppercase tracking-wide">Completed</th>
-                          <th className="text-center py-3 px-4 text-sm font-semibold text-[var(--steel-500)] font-['Sora'] uppercase tracking-wide">Avg. Time (h)</th>
-                          <th className="text-center py-3 px-4 text-sm font-semibold text-[var(--steel-500)] font-['Sora'] uppercase tracking-wide">Rating</th>
+                        <tr className="border-b border-[var(--card-border)]">
+                          <th className="text-left py-3 px-4 text-sm font-semibold text-muted uppercase tracking-wide">Team</th>
+                          <th className="text-center py-3 px-4 text-sm font-semibold text-muted uppercase tracking-wide">Completed</th>
+                          <th className="text-center py-3 px-4 text-sm font-semibold text-muted uppercase tracking-wide">Avg. Time (h)</th>
+                          <th className="text-center py-3 px-4 text-sm font-semibold text-muted uppercase tracking-wide">Rating</th>
                         </tr>
                       </thead>
                       <tbody>
                         {reportData.teamPerformance.map((team, index) => (
-                          <tr key={index} className="border-b border-[var(--border-default)]">
-                            <td className="py-3 px-4 font-semibold text-[var(--steel-900)] font-['DM_Sans']">{team.name}</td>
-                            <td className="py-3 px-4 text-center text-[var(--steel-700)] font-['DM_Sans']">{team.completed}</td>
-                            <td className="py-3 px-4 text-center text-[var(--steel-700)] font-['DM_Sans']">{team.avgTime}</td>
+                          <tr key={index} className="border-b border-[var(--card-border)]">
+                            <td className="py-3 px-4 font-medium text-primary">{team.name}</td>
+                            <td className="py-3 px-4 text-center text-secondary">{team.completed}</td>
+                            <td className="py-3 px-4 text-center text-secondary">{team.avgTime}</td>
                             <td className="py-3 px-4 text-center">
-                              <span className="inline-flex items-center gap-1 text-[var(--steel-700)] font-['DM_Sans']">
+                              <span className="inline-flex items-center gap-1 text-secondary">
                                 <span className="text-[var(--status-warning)]">★</span>
                                 {team.rating}
                               </span>
@@ -467,21 +467,21 @@ export default function ReportsPage() {
                   </div>
                 </div>
 
-                <div className="bg-white rounded-2xl p-6 border border-[var(--border-subtle)]" style={{ boxShadow: 'var(--shadow-sm)' }}>
-                  <h3 className="text-lg font-bold mb-4 font-['Sora'] text-[var(--steel-900)]">Top Technicians</h3>
+                <div className="glass-card p-6" style={{ boxShadow: 'var(--shadow-sm)' }}>
+                  <h3 className="text-lg font-semibold mb-4 text-primary">Top Technicians</h3>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {reportData.technicianStats.map((tech, index) => (
-                      <div key={index} className="p-4 bg-[var(--steel-50)] rounded-xl flex items-center gap-4">
+                      <div key={index} className="p-4 bg-[rgba(255,255,255,0.05)] rounded-xl flex items-center gap-4 border border-[var(--card-border)]">
                         <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
-                          index === 0 ? 'bg-[var(--status-warning-bg)] text-[var(--status-warning)]' :
-                          index === 1 ? 'bg-[var(--steel-200)] text-[var(--steel-600)]' :
-                          'bg-[var(--brand-accent-muted)] text-[var(--brand-accent)]'
+                          index === 0 ? 'bg-[rgba(245,158,11,0.1)] text-[var(--status-warning)]' :
+                          index === 1 ? 'bg-[rgba(255,255,255,0.1)] text-secondary' :
+                          'bg-[rgba(59,130,246,0.1)] text-[var(--brand-accent)]'
                         }`}>
                           {index === 0 ? '🥇' : index === 1 ? '🥈' : '🥉'}
                         </div>
                         <div>
-                          <p className="font-semibold text-[var(--steel-900)] font-['DM_Sans']">{tech.name}</p>
-                          <p className="text-sm text-[var(--steel-500)] font-['DM_Sans']">
+                          <p className="font-medium text-primary">{tech.name}</p>
+                          <p className="text-sm text-muted">
                             {tech.completed} completed • {tech.avgTime}h avg
                           </p>
                         </div>
@@ -493,27 +493,27 @@ export default function ReportsPage() {
             )}
 
             {selectedReport === 'workCenter' && reportData && (
-              <div className="bg-white rounded-2xl p-6 border border-[var(--border-subtle)]" style={{ boxShadow: 'var(--shadow-sm)' }}>
-                <h3 className="text-lg font-bold mb-4 font-['Sora'] text-[var(--steel-900)]">Work Center Statistics</h3>
+              <div className="glass-card p-6" style={{ boxShadow: 'var(--shadow-sm)' }}>
+                <h3 className="text-lg font-semibold mb-4 text-primary">Work Center Statistics</h3>
                 <div className="space-y-6">
                   {reportData.workCenterStats.map((wc, index) => (
-                    <div key={index} className="border-b border-[var(--border-default)] pb-4 last:border-0">
+                    <div key={index} className="border-b border-[var(--card-border)] pb-4 last:border-0">
                       <div className="flex justify-between items-start mb-2">
                         <div>
-                          <h4 className="font-semibold text-[var(--steel-900)] font-['DM_Sans']">{wc.name}</h4>
-                          <p className="text-sm text-[var(--steel-500)] font-['DM_Sans']">
+                          <h4 className="font-medium text-primary">{wc.name}</h4>
+                          <p className="text-sm text-muted">
                             {wc.completed}/{wc.requests} requests completed
                           </p>
                         </div>
-                        <span className={`px-2.5 py-1 rounded-lg text-sm font-semibold font-['DM_Sans'] ${
-                          wc.utilization >= 80 ? 'bg-[var(--status-success-bg)] text-[var(--status-success)]' :
-                          wc.utilization >= 60 ? 'bg-[var(--status-warning-bg)] text-[var(--status-warning)]' :
-                          'bg-[var(--status-danger-bg)] text-[var(--status-danger)]'
+                        <span className={`px-2.5 py-1 rounded-lg text-sm font-medium ${
+                          wc.utilization >= 80 ? 'bg-[rgba(16,185,129,0.1)] text-[var(--status-success)]' :
+                          wc.utilization >= 60 ? 'bg-[rgba(245,158,11,0.1)] text-[var(--status-warning)]' :
+                          'bg-[rgba(239,68,68,0.1)] text-[var(--status-danger)]'
                         }`}>
                           {wc.utilization}% utilization
                         </span>
                       </div>
-                      <div className="w-full bg-[var(--steel-200)] rounded-full h-3">
+                      <div className="w-full bg-[rgba(255,255,255,0.1)] rounded-full h-3">
                         <div 
                           className={`h-3 rounded-full ${
                             wc.utilization >= 80 ? 'bg-[var(--status-success)]' :

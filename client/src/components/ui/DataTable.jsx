@@ -32,22 +32,22 @@ const DataTable = ({
 
   if (loading) {
     return (
-      <div className="bg-white rounded-xl border border-[var(--border-subtle)] overflow-hidden" style={{ boxShadow: 'var(--shadow-sm)' }}>
+      <div className="glass-card overflow-hidden">
         <div className="animate-pulse">
           {/* Header Skeleton */}
-          <div className="bg-[var(--steel-50)] border-b border-[var(--border-default)] px-6 py-4">
+          <div className="bg-[rgba(255,255,255,0.03)] border-b border-[var(--card-border)] px-6 py-4">
             <div className="flex gap-4">
               {columns.map((_, i) => (
-                <div key={i} className="h-4 bg-[var(--steel-200)] rounded flex-1" />
+                <div key={i} className="h-4 bg-[rgba(255,255,255,0.08)] rounded flex-1" />
               ))}
             </div>
           </div>
           {/* Row Skeletons */}
           {[...Array(5)].map((_, i) => (
-            <div key={i} className="px-6 py-4 border-b border-[var(--border-subtle)]">
+            <div key={i} className="px-6 py-4 border-b border-[var(--card-border)]">
               <div className="flex gap-4">
                 {columns.map((_, j) => (
-                  <div key={j} className="h-4 bg-[var(--steel-100)] rounded flex-1" />
+                  <div key={j} className="h-4 bg-[rgba(255,255,255,0.05)] rounded flex-1" />
                 ))}
               </div>
             </div>
@@ -58,18 +58,18 @@ const DataTable = ({
   }
 
   return (
-    <div className="bg-white rounded-xl border border-[var(--border-subtle)] overflow-hidden" style={{ boxShadow: 'var(--shadow-sm)' }}>
+    <div className="overflow-hidden border border-[var(--border-strong)] rounded-lg bg-transparent">
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
-            <tr className="bg-[var(--steel-50)] border-b border-[var(--border-default)]">
+            <tr className="bg-transparent border-b border-[var(--border-strong)]">
               {columns.map((column) => (
                 <th
                   key={column.key}
                   onClick={() => column.sortable !== false && handleSort(column.key)}
                   className={`
-                    px-6 py-4 text-left text-xs font-semibold text-[var(--steel-500)] uppercase tracking-wider font-['DM_Sans']
-                    ${column.sortable !== false ? 'cursor-pointer hover:bg-[var(--steel-100)] hover:text-[var(--steel-700)] transition-all' : ''}
+                    px-5 py-2.5 text-left text-[11px] font-semibold text-muted uppercase tracking-wider
+                    ${column.sortable !== false ? 'cursor-pointer hover:text-primary transition-colors' : ''}
                   `}
                   style={{ width: column.width }}
                 >
@@ -93,12 +93,12 @@ const DataTable = ({
               <tr>
                 <td colSpan={columns.length} className="px-6 py-16 text-center">
                   <div className="flex flex-col items-center gap-4">
-                    <div className="w-16 h-16 bg-[var(--steel-100)] rounded-xl flex items-center justify-center">
-                      <FileText className="w-8 h-8 text-[var(--steel-400)]" />
+                    <div className="w-16 h-16 bg-[rgba(255,255,255,0.05)] rounded-xl flex items-center justify-center">
+                      <FileText className="w-8 h-8 text-secondary" />
                     </div>
                     <div>
-                      <p className="text-[var(--steel-700)] font-semibold font-['Sora']">No data available</p>
-                      <p className="text-sm text-[var(--steel-500)] mt-1 font-['DM_Sans']">Records will appear here once created</p>
+                      <p className="text-primary font-light">No data available</p>
+                      <p className="text-sm text-muted mt-1">Records will appear here once created</p>
                     </div>
                   </div>
                 </td>
@@ -109,13 +109,13 @@ const DataTable = ({
                   key={row.id || rowIndex}
                   onClick={() => onRowClick?.(row)}
                   className={`
-                    hover:bg-[var(--brand-accent-muted)] transition-colors
+                    hover:bg-[rgba(255,255,255,0.04)] transition-colors
                     ${onRowClick ? 'cursor-pointer' : ''}
                     ${row.isOverdue ? 'bg-[var(--status-danger-bg)]' : ''}
                   `}
                 >
                   {columns.map((column) => (
-                    <td key={column.key} className="px-6 py-4">
+                    <td key={column.key} className="px-5 py-2.5">
                       {column.render 
                         ? column.render(row[column.key], row)
                         : <span className="text-sm text-[var(--steel-700)] font-['DM_Sans']">{row[column.key]}</span>
@@ -131,51 +131,51 @@ const DataTable = ({
 
       {/* Pagination */}
       {pagination && (
-        <div className="flex items-center justify-between px-6 py-4 border-t border-[var(--border-default)] bg-[var(--steel-50)]">
+        <div className="flex items-center justify-between px-5 py-3 border-t border-[var(--border-strong)] bg-transparent">
           <p className="text-sm text-[var(--steel-600)] font-['DM_Sans']">
             Showing{' '}
             <span className="font-semibold text-[var(--steel-800)]">
               {((pagination.page - 1) * pagination.limit) + 1}
             </span>
             {' '}to{' '}
-            <span className="font-semibold text-[var(--steel-800)]">
+            <span className="font-medium text-primary">
               {Math.min(pagination.page * pagination.limit, pagination.total)}
             </span>
             {' '}of{' '}
-            <span className="font-semibold text-[var(--steel-800)]">{pagination.total}</span> results
+            <span className="font-medium text-primary">{pagination.total}</span> results
           </p>
 
           <div className="flex items-center gap-1">
             <button
               onClick={() => onPageChange?.(1)}
               disabled={pagination.page === 1}
-              className="p-2 rounded-lg text-[var(--steel-500)] hover:bg-[var(--steel-200)] hover:text-[var(--steel-700)] disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+              className="p-2 rounded-lg text-secondary hover:bg-[rgba(255,255,255,0.05)] hover:text-primary disabled:opacity-40 disabled:cursor-not-allowed transition-all"
             >
               <ChevronsLeft className="w-4 h-4" />
             </button>
             <button
               onClick={() => onPageChange?.(pagination.page - 1)}
               disabled={pagination.page === 1}
-              className="p-2 rounded-lg text-[var(--steel-500)] hover:bg-[var(--steel-200)] hover:text-[var(--steel-700)] disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+              className="p-2 rounded-lg text-secondary hover:bg-[rgba(255,255,255,0.05)] hover:text-primary disabled:opacity-40 disabled:cursor-not-allowed transition-all"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
             
-            <span className="px-4 py-1.5 text-sm font-semibold text-[var(--steel-700)] bg-white rounded-lg border border-[var(--border-default)] font-['DM_Sans']">
+            <span className="px-3 py-1 text-sm font-light text-primary bg-transparent rounded-md border border-[var(--border-subtle)]">
               {pagination.page} / {pagination.totalPages}
             </span>
             
             <button
               onClick={() => onPageChange?.(pagination.page + 1)}
               disabled={pagination.page === pagination.totalPages}
-              className="p-2 rounded-lg text-[var(--steel-500)] hover:bg-[var(--steel-200)] hover:text-[var(--steel-700)] disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+              className="p-2 rounded-lg text-secondary hover:bg-[rgba(255,255,255,0.05)] hover:text-primary disabled:opacity-40 disabled:cursor-not-allowed transition-all"
             >
               <ChevronRight className="w-4 h-4" />
             </button>
             <button
               onClick={() => onPageChange?.(pagination.totalPages)}
               disabled={pagination.page === pagination.totalPages}
-              className="p-2 rounded-lg text-[var(--steel-500)] hover:bg-[var(--steel-200)] hover:text-[var(--steel-700)] disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+              className="p-2 rounded-lg text-secondary hover:bg-[rgba(255,255,255,0.05)] hover:text-primary disabled:opacity-40 disabled:cursor-not-allowed transition-all"
             >
               <ChevronsRight className="w-4 h-4" />
             </button>

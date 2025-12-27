@@ -146,11 +146,11 @@ export default function GlobalSearch() {
       <div className="hidden md:flex items-center">
         <button
           onClick={() => setIsOpen(true)}
-          className="relative w-64 pl-10 pr-4 py-2 text-sm text-left bg-slate-100 rounded-lg hover:bg-slate-200 transition-all duration-200"
+          className="gg-global-search-trigger w-64 px-3 py-2 text-sm bg-[rgba(255,255,255,0.05)] rounded-lg hover:bg-[rgba(255,255,255,0.08)] transition-all flex items-center gap-2"
         >
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-          <span className="text-slate-400">Search...</span>
-          <kbd className="absolute right-3 top-1/2 -translate-y-1/2 px-1.5 py-0.5 text-xs bg-slate-200 rounded text-slate-500">
+          <Search className="w-4 h-4 text-muted shrink-0" />
+          <span className="text-muted leading-none">Search...</span>
+          <kbd className="absolute right-3 top-1/2 -translate-y-1/2 px-1.5 py-0.5 text-xs bg-[rgba(255,255,255,0.1)] rounded text-secondary">
             ⌘K
           </kbd>
         </button>
@@ -162,16 +162,16 @@ export default function GlobalSearch() {
     <>
       {/* Backdrop */}
       <div 
-        className="fixed inset-0 bg-black/50 z-50" 
+        className="fixed inset-0 bg-black/70 z-50 backdrop-blur-sm" 
         onClick={() => setIsOpen(false)}
       />
       
       {/* Modal */}
       <div className="fixed top-20 left-1/2 -translate-x-1/2 w-full max-w-xl z-50">
-        <div className="bg-white rounded-xl shadow-2xl overflow-hidden">
+        <div className="glass-card overflow-hidden">
           {/* Search Input */}
-          <div className="flex items-center px-4 border-b border-gray-200">
-            <Search className="w-5 h-5 text-gray-400" />
+          <div className="flex items-center px-4 border-b border-[var(--card-border)]">
+            <Search className="w-5 h-5 text-muted" />
             <input
               ref={inputRef}
               type="text"
@@ -179,11 +179,11 @@ export default function GlobalSearch() {
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={handleKeyNav}
               placeholder="Search maintenance, equipment, teams..."
-              className="flex-1 px-4 py-4 text-gray-900 placeholder-gray-400 focus:outline-none"
+              className="flex-1 px-4 py-4 bg-transparent text-primary placeholder-muted focus:outline-none"
             />
             {query && (
-              <button onClick={() => setQuery('')} className="p-1 hover:bg-gray-100 rounded">
-                <X className="w-4 h-4 text-gray-400" />
+              <button onClick={() => setQuery('')} className="p-1 hover:bg-[rgba(255,255,255,0.05)] rounded">
+                <X className="w-4 h-4 text-muted" />
               </button>
             )}
           </div>
@@ -192,8 +192,8 @@ export default function GlobalSearch() {
           {query.length >= 2 && (
             <div ref={resultsRef} className="max-h-96 overflow-y-auto">
               {loading ? (
-                <div className="p-4 text-center text-gray-500">
-                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600 mx-auto"></div>
+                <div className="p-4 text-center text-secondary">
+                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[var(--brand-accent)] mx-auto"></div>
                 </div>
               ) : allResults.length > 0 ? (
                 <div className="py-2">
@@ -201,28 +201,28 @@ export default function GlobalSearch() {
                     <button
                       key={`${item.type}-${item.id}`}
                       onClick={() => handleSelect(item)}
-                      className={`w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-gray-50 ${
-                        index === activeIndex ? 'bg-blue-50' : ''
+                      className={`w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-[rgba(59,130,246,0.08)] transition-colors ${
+                        index === activeIndex ? 'bg-[var(--brand-accent-muted)]' : ''
                       }`}
                     >
                       {getIcon(item.type)}
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-gray-900 truncate">
+                        <p className="text-sm font-light text-primary truncate">
                           {item.name || item.title || item.requestNumber}
                         </p>
-                        <p className="text-xs text-gray-500 truncate">
+                        <p className="text-xs text-muted truncate">
                           {item.code || item.description || ''}
                         </p>
                       </div>
-                      <span className="text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded">
+                      <span className="text-xs text-secondary bg-[rgba(255,255,255,0.05)] px-2 py-1 rounded">
                         {getLabel(item.type)}
                       </span>
                     </button>
                   ))}
                 </div>
               ) : (
-                <div className="p-8 text-center text-gray-500">
-                  <Search className="w-8 h-8 mx-auto mb-2 text-gray-300" />
+                <div className="p-8 text-center text-secondary">
+                  <Search className="w-8 h-8 mx-auto mb-2 text-muted" />
                   <p>No results found for "{query}"</p>
                 </div>
               )}
@@ -230,15 +230,15 @@ export default function GlobalSearch() {
           )}
 
           {/* Hints */}
-          <div className="px-4 py-2 bg-gray-50 border-t border-gray-200 flex justify-between text-xs text-gray-400">
+          <div className="px-4 py-2 bg-[rgba(255,255,255,0.03)] border-t border-[var(--card-border)] flex justify-between text-xs text-muted">
             <span>
-              <kbd className="px-1.5 py-0.5 bg-gray-200 rounded mr-1">↑↓</kbd> to navigate
+              <kbd className="px-1.5 py-0.5 bg-[rgba(255,255,255,0.1)] rounded mr-1">↑↓</kbd> to navigate
             </span>
             <span>
-              <kbd className="px-1.5 py-0.5 bg-gray-200 rounded mr-1">↵</kbd> to select
+              <kbd className="px-1.5 py-0.5 bg-[rgba(255,255,255,0.1)] rounded mr-1">↵</kbd> to select
             </span>
             <span>
-              <kbd className="px-1.5 py-0.5 bg-gray-200 rounded mr-1">esc</kbd> to close
+              <kbd className="px-1.5 py-0.5 bg-[rgba(255,255,255,0.1)] rounded mr-1">esc</kbd> to close
             </span>
           </div>
         </div>

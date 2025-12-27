@@ -1,142 +1,47 @@
 const statusConfig = {
-  'New Request': {
-    bg: 'bg-[var(--steel-100)]',
-    text: 'text-[var(--steel-700)]',
-    border: 'border-[var(--steel-200)]',
-    dot: 'bg-[var(--steel-500)]'
-  },
-  'Draft': {
-    bg: 'bg-[var(--steel-100)]',
-    text: 'text-[var(--steel-600)]',
-    border: 'border-[var(--steel-200)]',
-    dot: 'bg-[var(--steel-400)]'
-  },
-  'DRAFT': {
-    bg: 'bg-[var(--steel-100)]',
-    text: 'text-[var(--steel-600)]',
-    border: 'border-[var(--steel-200)]',
-    dot: 'bg-[var(--steel-400)]'
-  },
-  'SUBMITTED': {
-    bg: 'bg-[var(--status-info-bg)]',
-    text: 'text-[var(--status-info)]',
-    border: 'border-[var(--status-info-border)]',
-    dot: 'bg-[var(--status-info)]'
-  },
-  'In Review': {
-    bg: 'bg-[var(--status-warning-bg)]',
-    text: 'text-amber-700',
-    border: 'border-[var(--status-warning-border)]',
-    dot: 'bg-[var(--status-warning)]'
-  },
-  'IN_REVIEW': {
-    bg: 'bg-[var(--status-warning-bg)]',
-    text: 'text-amber-700',
-    border: 'border-[var(--status-warning-border)]',
-    dot: 'bg-[var(--status-warning)]'
-  },
-  'Approved': {
-    bg: 'bg-[var(--status-info-bg)]',
-    text: 'text-[var(--status-info)]',
-    border: 'border-[var(--status-info-border)]',
-    dot: 'bg-[var(--status-info)]'
-  },
-  'APPROVED': {
-    bg: 'bg-[var(--status-info-bg)]',
-    text: 'text-[var(--status-info)]',
-    border: 'border-[var(--status-info-border)]',
-    dot: 'bg-[var(--status-info)]'
-  },
-  'PENDING': {
-    bg: 'bg-[var(--status-warning-bg)]',
-    text: 'text-amber-700',
-    border: 'border-[var(--status-warning-border)]',
-    dot: 'bg-[var(--status-warning)]'
-  },
-  'In Progress': {
-    bg: 'bg-[var(--brand-accent-muted)]',
-    text: 'text-[var(--brand-accent)]',
-    border: 'border-[rgba(255,107,53,0.3)]',
-    dot: 'bg-[var(--brand-accent)]'
-  },
-  'IN_PROGRESS': {
-    bg: 'bg-[var(--brand-accent-muted)]',
-    text: 'text-[var(--brand-accent)]',
-    border: 'border-[rgba(255,107,53,0.3)]',
-    dot: 'bg-[var(--brand-accent)]'
-  },
-  'On Hold': {
-    bg: 'bg-orange-50',
-    text: 'text-orange-700',
-    border: 'border-orange-200',
-    dot: 'bg-orange-500'
-  },
-  'ON_HOLD': {
-    bg: 'bg-orange-50',
-    text: 'text-orange-700',
-    border: 'border-orange-200',
-    dot: 'bg-orange-500'
-  },
-  'Completed': {
-    bg: 'bg-[var(--status-success-bg)]',
-    text: 'text-[var(--status-success)]',
-    border: 'border-[var(--status-success-border)]',
-    dot: 'bg-[var(--status-success)]'
-  },
-  'COMPLETED': {
-    bg: 'bg-[var(--status-success-bg)]',
-    text: 'text-[var(--status-success)]',
-    border: 'border-[var(--status-success-border)]',
-    dot: 'bg-[var(--status-success)]'
-  },
-  'Reopened': {
-    bg: 'bg-yellow-50',
-    text: 'text-yellow-700',
-    border: 'border-yellow-200',
-    dot: 'bg-yellow-500'
-  },
-  'REOPENED': {
-    bg: 'bg-yellow-50',
-    text: 'text-yellow-700',
-    border: 'border-yellow-200',
-    dot: 'bg-yellow-500'
-  },
-  'Cancelled': {
-    bg: 'bg-[var(--status-danger-bg)]',
-    text: 'text-[var(--status-danger)]',
-    border: 'border-[var(--status-danger-border)]',
-    dot: 'bg-[var(--status-danger)]'
-  },
-  'CANCELLED': {
-    bg: 'bg-[var(--status-danger-bg)]',
-    text: 'text-[var(--status-danger)]',
-    border: 'border-[var(--status-danger-border)]',
-    dot: 'bg-[var(--status-danger)]'
-  }
+  'New Request': { dot: 'bg-[var(--text-secondary)]', strong: false },
+  'Draft': { dot: 'bg-[var(--text-secondary)]', strong: false },
+  'DRAFT': { dot: 'bg-[var(--text-secondary)]', strong: false },
+  'SUBMITTED': { dot: 'bg-[var(--status-info)]', strong: false },
+  'In Review': { dot: 'bg-[var(--status-warning)]', strong: false },
+  'IN_REVIEW': { dot: 'bg-[var(--status-warning)]', strong: false },
+  'Approved': { dot: 'bg-[var(--status-info)]', strong: false },
+  'APPROVED': { dot: 'bg-[var(--status-info)]', strong: false },
+  'PENDING': { dot: 'bg-[var(--status-warning)]', strong: false },
+  'In Progress': { dot: 'bg-[var(--brand-accent)]', strong: false },
+  'IN_PROGRESS': { dot: 'bg-[var(--brand-accent)]', strong: false },
+  'On Hold': { dot: 'bg-orange-500', strong: false },
+  'ON_HOLD': { dot: 'bg-orange-500', strong: false },
+  'Completed': { dot: 'bg-[var(--status-success)]', strong: false },
+  'COMPLETED': { dot: 'bg-[var(--status-success)]', strong: false },
+  'Reopened': { dot: 'bg-yellow-500', strong: false },
+  'REOPENED': { dot: 'bg-yellow-500', strong: false },
+  'Cancelled': { dot: 'bg-[var(--status-danger)]', strong: true },
+  'CANCELLED': { dot: 'bg-[var(--status-danger)]', strong: true }
 };
 
 const priorityConfig = {
   LOW: {
-    bg: 'bg-[var(--steel-100)]',
-    text: 'text-[var(--steel-600)]',
-    border: 'border-[var(--steel-200)]',
-    accent: 'bg-[var(--steel-400)]'
+    bg: 'bg-[rgba(255,255,255,0.05)]',
+    text: 'text-secondary',
+    border: 'border-[var(--card-border)]',
+    accent: 'bg-[var(--text-muted)]'
   },
   MEDIUM: {
-    bg: 'bg-yellow-50',
-    text: 'text-yellow-700',
-    border: 'border-yellow-200',
+    bg: 'bg-[rgba(234,179,8,0.15)]',
+    text: 'text-yellow-400',
+    border: 'border-[rgba(234,179,8,0.3)]',
     accent: 'bg-[var(--priority-medium)]'
   },
   HIGH: {
-    bg: 'bg-orange-50',
-    text: 'text-orange-700',
-    border: 'border-orange-200',
+    bg: 'bg-[rgba(249,115,22,0.15)]',
+    text: 'text-orange-400',
+    border: 'border-[rgba(249,115,22,0.3)]',
     accent: 'bg-[var(--priority-high)]'
   },
   CRITICAL: {
     bg: 'bg-[var(--status-danger-bg)]',
-    text: 'text-[var(--status-danger)]',
+    text: 'text-red-400',
     border: 'border-[var(--status-danger-border)]',
     accent: 'bg-[var(--priority-critical)]'
   }
@@ -153,9 +58,9 @@ export const StatusBadge = ({ status }) => {
       inline-flex items-center gap-2 px-3 py-1.5 
       rounded-lg text-xs font-semibold uppercase tracking-wide
       border font-['DM_Sans']
-      ${config.bg} ${config.text} ${config.border}
+      ${config.strong ? 'bg-[var(--status-danger-bg)] text-red-400 border-[var(--status-danger-border)]' : 'bg-[var(--steel-50)] text-secondary border-[var(--border-subtle)]'}
     `}>
-      <span className={`w-2 h-2 rounded-full ${config.dot} animate-pulse`} />
+      <span className={`w-2 h-2 rounded-full ${config.dot}`} />
       {displayStatus}
     </span>
   );

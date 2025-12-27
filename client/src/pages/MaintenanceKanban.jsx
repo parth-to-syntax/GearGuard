@@ -11,16 +11,16 @@ import MainLayout from '../components/layout/MainLayout';
 import StatusBadge from '../components/ui/StatusBadge';
 
 const statusColumns = [
-  { id: 'PENDING', label: 'Pending', color: 'bg-[var(--steel-100)]', accent: 'bg-[var(--steel-400)]' },
-  { id: 'APPROVED', label: 'Approved', color: 'bg-blue-50', accent: 'bg-blue-500' },
-  { id: 'IN_PROGRESS', label: 'In Progress', color: 'bg-[var(--brand-accent-muted)]', accent: 'bg-[var(--brand-accent)]' },
-  { id: 'ON_HOLD', label: 'On Hold', color: 'bg-orange-50', accent: 'bg-orange-500' },
-  { id: 'COMPLETED', label: 'Completed', color: 'bg-[var(--status-success-bg)]', accent: 'bg-[var(--status-success)]' },
-  { id: 'CANCELLED', label: 'Cancelled', color: 'bg-[var(--status-danger-bg)]', accent: 'bg-[var(--status-danger)]' },
+  { id: 'PENDING', label: 'Pending', color: 'bg-[var(--surface-card)]', accent: 'bg-[var(--text-muted)]' },
+  { id: 'APPROVED', label: 'Approved', color: 'bg-[var(--surface-card)]', accent: 'bg-[var(--brand-accent)]' },
+  { id: 'IN_PROGRESS', label: 'In Progress', color: 'bg-[var(--surface-card)]', accent: 'bg-[var(--status-warning)]' },
+  { id: 'ON_HOLD', label: 'On Hold', color: 'bg-[var(--surface-card)]', accent: 'bg-[var(--priority-high)]' },
+  { id: 'COMPLETED', label: 'Completed', color: 'bg-[var(--surface-card)]', accent: 'bg-[var(--status-success)]' },
+  { id: 'CANCELLED', label: 'Cancelled', color: 'bg-[var(--surface-card)]', accent: 'bg-[var(--status-danger)]' },
 ];
 
 const priorityColors = {
-  LOW: 'border-l-[var(--steel-400)]',
+  LOW: 'border-l-[var(--text-muted)]',
   MEDIUM: 'border-l-[var(--priority-medium)]',
   HIGH: 'border-l-[var(--priority-high)]',
   CRITICAL: 'border-l-[var(--priority-critical)]',
@@ -151,52 +151,57 @@ export default function MaintenanceKanban() {
             {...provided.draggableProps}
             {...provided.dragHandleProps}
             className={`
-              bg-white rounded-xl shadow-sm border-l-4 p-3 mb-2 cursor-pointer
-              hover:shadow-md transition-shadow
+              p-3 mb-3 cursor-pointer group
               ${priorityColors[request.priority]}
-              ${snapshot.isDragging ? 'shadow-lg rotate-2' : ''}
-              ${isOverdue ? 'ring-2 ring-[var(--status-danger)]' : ''}
+              ${snapshot.isDragging ? 'z-50' : ''}
+              ${isOverdue ? 'ring-1 ring-[var(--status-danger)]' : ''}
             `}
+            style={{
+              background: 'var(--surface-card)',
+              border: '1px solid var(--border-subtle)',
+              borderLeftWidth: 4,
+              borderRadius: '12px'
+            }}
             onClick={() => navigate(`/maintenance/${request.id}`)}
           >
             <div className="flex justify-between items-start mb-2">
-              <span className="text-xs text-[var(--steel-500)] font-['JetBrains_Mono']">
+              <span className="text-xs text-muted font-mono opacity-70">
                 {request.requestNumber}
               </span>
               {isOverdue && (
-                <span className="text-xs bg-[var(--status-danger-bg)] text-[var(--status-danger)] px-1.5 py-0.5 rounded font-['DM_Sans']">
+                <span className="text-[10px] bg-[var(--status-danger-bg)] text-[var(--status-danger)] px-1.5 py-0.5 rounded font-medium uppercase tracking-wide">
                   Overdue
                 </span>
               )}
             </div>
             
-            <h4 className="font-semibold text-sm text-[var(--steel-900)] mb-2 line-clamp-2 font-['DM_Sans']">
+            <h4 className="font-medium text-sm text-primary mb-2 line-clamp-2 leading-snug group-hover:text-[var(--brand-accent)] transition-colors">
               {request.title}
             </h4>
 
-            <div className="space-y-1 text-xs text-[var(--steel-500)] font-['DM_Sans']">
+            <div className="space-y-1.5 text-xs text-secondary">
               {request.equipment && (
-                <div className="flex items-center gap-1">
-                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                <div className="flex items-center gap-1.5">
+                  <svg className="w-3.5 h-3.5 text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2z" />
                   </svg>
-                  <span className="truncate">{request.equipment.name}</span>
+                  <span className="truncate opacity-90">{request.equipment.name}</span>
                 </div>
               )}
               
               {request.workCenter && (
-                <div className="flex items-center gap-1">
-                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                <div className="flex items-center gap-1.5">
+                  <svg className="w-3.5 h-3.5 text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                   </svg>
-                  <span className="truncate">{request.workCenter.name}</span>
+                  <span className="truncate opacity-90">{request.workCenter.name}</span>
                 </div>
               )}
             </div>
 
-            <div className="flex justify-between items-center mt-3 pt-2 border-t border-[var(--border-default)]">
+            <div className="flex justify-between items-center mt-3 pt-3 border-t border-[var(--border-subtle)]">
               <span className={`
-                text-xs font-medium px-2 py-0.5 rounded
+                text-[10px] font-semibold px-2 py-0.5 rounded uppercase tracking-wider
                 ${request.type === 'PREVENTIVE' ? 'bg-[var(--status-success-bg)] text-[var(--status-success)]' : 'bg-[var(--brand-accent-muted)] text-[var(--brand-accent)]'}
               `}>
                 {request.type === 'PREVENTIVE' ? 'PM' : 'CM'}
@@ -208,11 +213,11 @@ export default function MaintenanceKanban() {
                     <img 
                       src={request.assignedTo.avatar} 
                       alt={request.assignedTo.name}
-                      className="w-6 h-6 rounded-lg"
+                      className="w-5 h-5 rounded-md object-cover ring-1 ring-[var(--card-border)]"
                     />
                   ) : (
-                    <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-[var(--steel-600)] to-[var(--steel-700)] flex items-center justify-center">
-                      <span className="text-white text-xs font-semibold font-['Sora']">
+                    <div className="w-5 h-5 rounded-md bg-[rgba(255,255,255,0.1)] flex items-center justify-center ring-1 ring-[var(--card-border)]">
+                      <span className="text-primary text-[10px] font-medium">
                         {request.assignedTo.name.charAt(0)}
                       </span>
                     </div>
@@ -228,30 +233,29 @@ export default function MaintenanceKanban() {
 
   return (
     <MainLayout>
-    <div className="h-full flex flex-col">
+    <div className="flex-1 flex flex-col h-full overflow-hidden">
       {/* Header */}
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex justify-between items-center mb-6 shrink-0">
         <div>
-          <h1 className="text-2xl font-bold text-[var(--steel-900)] font-['Sora']">Maintenance Board</h1>
-          <p className="text-[var(--steel-500)] font-['DM_Sans']">Drag and drop to update status</p>
+          <h1 className="text-2xl font-semibold text-primary tracking-tight">Maintenance Board</h1>
+          <p className="text-secondary mt-1">Drag and drop to update status</p>
         </div>
         <div className="flex gap-2">
           <Link 
             to="/maintenance"
-            className="px-4 py-2.5 text-[var(--steel-600)] hover:text-[var(--steel-900)] border border-[var(--border-default)] rounded-xl font-medium font-['DM_Sans'] hover:bg-[var(--steel-50)] transition-all"
+            className="lux-btn px-4 py-2 text-sm"
           >
             List View
           </Link>
           <Link 
             to="/maintenance/calendar"
-            className="px-4 py-2.5 text-[var(--steel-600)] hover:text-[var(--steel-900)] border border-[var(--border-default)] rounded-xl font-medium font-['DM_Sans'] hover:bg-[var(--steel-50)] transition-all"
+            className="lux-btn px-4 py-2 text-sm"
           >
             Calendar
           </Link>
           <Link 
             to="/maintenance/new"
-            className="px-5 py-2.5 bg-gradient-to-r from-[#ff6b35] to-[#e85a2a] text-white rounded-xl font-semibold font-['DM_Sans'] hover:-translate-y-0.5 transition-all"
-            style={{ boxShadow: '0 4px 14px rgba(255, 107, 53, 0.35)' }}
+            className="lux-btn-primary px-4 py-2 text-sm"
           >
             + New Request
           </Link>
@@ -259,12 +263,12 @@ export default function MaintenanceKanban() {
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-xl border border-[var(--border-subtle)] p-4 mb-6" style={{ boxShadow: 'var(--shadow-sm)' }}>
+      <div className="glass-card p-4 mb-6 shrink-0" style={{ boxShadow: 'var(--shadow-sm)' }}>
         <div className="flex gap-3 flex-wrap">
           <select
             value={filters.workCenterId}
             onChange={(e) => setFilters(prev => ({ ...prev, workCenterId: e.target.value }))}
-            className="px-4 py-2.5 bg-[var(--steel-50)] border-2 border-transparent rounded-xl text-sm font-['DM_Sans'] focus:bg-white focus:border-[var(--brand-accent)] transition-all"
+            className="lux-input px-4 py-2 text-sm"
           >
             <option value="">All Work Centers</option>
             {workCenters.map(wc => (
@@ -275,7 +279,7 @@ export default function MaintenanceKanban() {
           <select
             value={filters.teamId}
             onChange={(e) => setFilters(prev => ({ ...prev, teamId: e.target.value }))}
-            className="px-4 py-2.5 bg-[var(--steel-50)] border-2 border-transparent rounded-xl text-sm font-['DM_Sans'] focus:bg-white focus:border-[var(--brand-accent)] transition-all"
+            className="lux-input px-4 py-2 text-sm"
           >
             <option value="">All Teams</option>
             {teams.map(team => (
@@ -286,7 +290,7 @@ export default function MaintenanceKanban() {
           <select
             value={filters.priority}
             onChange={(e) => setFilters(prev => ({ ...prev, priority: e.target.value }))}
-            className="px-4 py-2.5 bg-[var(--steel-50)] border-2 border-transparent rounded-xl text-sm font-['DM_Sans'] focus:bg-white focus:border-[var(--brand-accent)] transition-all"
+            className="lux-input px-4 py-2 text-sm"
           >
             <option value="">All Priorities</option>
             <option value="LOW">Low</option>
@@ -298,7 +302,7 @@ export default function MaintenanceKanban() {
           <select
             value={filters.type}
             onChange={(e) => setFilters(prev => ({ ...prev, type: e.target.value }))}
-            className="px-4 py-2.5 bg-[var(--steel-50)] border-2 border-transparent rounded-xl text-sm font-['DM_Sans'] focus:bg-white focus:border-[var(--brand-accent)] transition-all"
+            className="lux-input px-4 py-2 text-sm"
           >
             <option value="">All Types</option>
             <option value="PREVENTIVE">Preventive</option>
@@ -308,7 +312,7 @@ export default function MaintenanceKanban() {
           {Object.values(filters).some(Boolean) && (
             <button
               onClick={() => setFilters({ workCenterId: '', teamId: '', priority: '', type: '' })}
-              className="px-4 py-2.5 text-sm text-[var(--status-danger)] hover:bg-[var(--status-danger-bg)] rounded-xl font-medium font-['DM_Sans'] transition-all"
+              className="px-4 py-2 text-sm text-[var(--status-danger)] hover:bg-[var(--status-danger-bg)] rounded-lg font-medium transition-all"
             >
               Clear Filters
             </button>
@@ -319,33 +323,31 @@ export default function MaintenanceKanban() {
       {/* Kanban Board */}
       {loading ? (
         <div className="flex-1 flex items-center justify-center">
-          <div className="w-12 h-12 border-3 border-[var(--steel-200)] border-t-[var(--brand-accent)] rounded-full animate-spin"></div>
+          <div className="w-10 h-10 border-3 border-[var(--card-border)] border-t-[var(--brand-accent)] rounded-full animate-spin"></div>
         </div>
       ) : error ? (
-        <div className="flex-1 flex items-center justify-center text-[var(--status-danger)] font-['DM_Sans']">
+        <div className="flex-1 flex items-center justify-center text-[var(--status-danger)]">
           {error}
         </div>
       ) : (
         <DragDropContext onDragEnd={handleDragEnd}>
-          <div className="flex-1 overflow-x-auto">
-            <div className="flex gap-4 h-full min-w-max pb-4">
+          <div className="flex-1 overflow-x-auto pb-2">
+            <div className="flex gap-4 h-full min-w-max">
               {statusColumns.map(column => (
                 <div 
                   key={column.id} 
-                  className={`w-80 flex flex-col rounded-xl ${column.color} border border-[var(--border-subtle)]`}
+                  className={`w-80 flex flex-col rounded-lg border border-[var(--border-subtle)] ${column.color}`}
                 >
-                  <div className="p-4 border-b border-[var(--border-default)] bg-white/60 backdrop-blur-sm rounded-t-xl">
-                    <div className="flex justify-between items-center">
-                      <div className="flex items-center gap-2">
-                        <div className={`w-3 h-3 rounded-full ${column.accent}`}></div>
-                        <h3 className="font-semibold text-[var(--steel-800)] font-['Sora'] text-sm uppercase tracking-wide">
-                          {column.label}
-                        </h3>
-                      </div>
-                      <span className="bg-white text-[var(--steel-600)] text-xs font-bold px-2.5 py-1 rounded-lg border border-[var(--border-default)] font-['DM_Sans']">
-                        {columns[column.id]?.length || 0}
-                      </span>
+                  <div className="p-3 border-b border-[var(--border-subtle)] flex justify-between items-center shrink-0">
+                    <div className="flex items-center gap-2">
+                      <div className={`w-2 h-2 rounded-full ${column.accent}`}></div>
+                      <h3 className="font-medium text-primary text-xs uppercase tracking-wider">
+                        {column.label}
+                      </h3>
                     </div>
+                    <span className="bg-[rgba(255,255,255,0.05)] text-secondary text-xs font-medium px-2 py-0.5 rounded border border-[var(--border-subtle)]">
+                      {columns[column.id]?.length || 0}
+                    </span>
                   </div>
 
                   <Droppable droppableId={column.id}>
@@ -353,10 +355,7 @@ export default function MaintenanceKanban() {
                       <div
                         ref={provided.innerRef}
                         {...provided.droppableProps}
-                        className={`
-                          flex-1 p-3 overflow-y-auto min-h-[200px] transition-colors duration-200
-                          ${snapshot.isDraggingOver ? 'bg-[var(--brand-accent-muted)]' : ''}
-                        `}
+                        className={`flex-1 p-3 overflow-y-auto min-h-[100px] transition-colors duration-200`}
                       >
                         {columns[column.id]?.map((request, index) => (
                           <RequestCard 

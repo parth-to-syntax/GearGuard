@@ -112,7 +112,7 @@ const LoginPage = () => {
 
       {/* Right Panel - Login Form */}
       <div className="flex-1 flex items-center justify-center p-6 sm:p-12 bg-[var(--surface-ground)]">
-        <div className={`w-full max-w-md animate-fade-in ${errorMessage ? 'animate-shake' : ''}`}>
+        <div className={`w-full max-w-xl animate-fade-in ${errorMessage ? 'animate-shake' : ''}`}>
           {/* Mobile Logo */}
           <div className="lg:hidden text-center mb-8">
             <div 
@@ -121,21 +121,21 @@ const LoginPage = () => {
             >
               <Wrench className="w-7 h-7 text-white" strokeWidth={2.5} />
             </div>
-            <h2 className="font-['Sora'] font-bold text-xl text-[var(--steel-900)]">GearGuard</h2>
+            <h2 className="font-['Inter'] font-bold text-2xl text-[var(--steel-900)] tracking-tight">GearGuard</h2>
           </div>
 
           {/* Header */}
-          <div className="mb-8">
-            <h1 className="font-['Sora'] text-2xl sm:text-3xl font-bold text-[var(--steel-900)] mb-2">
+          <div className="mb-12 text-center">
+            <h1 className="font-['Inter'] text-4xl sm:text-5xl font-bold text-[var(--steel-900)] mb-6 leading-[1.1] tracking-tight">
               Welcome back
             </h1>
-            <p className="text-[var(--steel-500)] font-['DM_Sans']">
+            <p className="text-[var(--steel-500)] font-['Inter'] text-xl leading-relaxed tracking-wide">
               Sign in to continue to your dashboard
             </p>
           </div>
 
           {/* Form Card */}
-          <div className="bg-white rounded-2xl shadow-xl border border-[var(--border-subtle)] p-8" style={{ boxShadow: 'var(--shadow-lg)' }}>
+          <div className="bg-white rounded-3xl shadow-xl border border-[var(--border-subtle)] p-12" style={{ boxShadow: 'var(--shadow-lg)' }}>
             {/* Error Alert */}
             {errorMessage && (
               <div className="mb-6 p-4 bg-[var(--status-danger-bg)] border border-[var(--status-danger-border)] rounded-xl text-[var(--status-danger)] text-sm font-medium flex items-center gap-3">
@@ -146,20 +146,20 @@ const LoginPage = () => {
               </div>
             )}
 
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
               {/* Email Field */}
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-[var(--steel-700)] mb-2 font-['DM_Sans']">
+                <label htmlFor="email" className="block text-lg font-semibold text-[var(--steel-700)] mb-4 font-['Inter'] tracking-wide">
                   Email Address <span className="text-[var(--status-danger)]">*</span>
                 </label>
                 <div className="relative">
-                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--steel-400)]" />
+                  <Mail className="absolute right-5 top-1/2 -translate-y-1/2 w-6 h-6 text-[var(--steel-400)]" />
                   <input
                     {...register('email')}
                     type="email"
                     id="email"
                     placeholder="you@company.com"
-                    className={`w-full pl-12 pr-4 py-3.5 bg-[var(--steel-50)] border-2 rounded-xl text-[var(--steel-900)] font-['DM_Sans'] placeholder:text-[var(--steel-400)] focus:outline-none focus:bg-white transition-all duration-200 ${
+                    className={`w-full pl-6 pr-14 py-5 bg-[var(--steel-50)] border-2 rounded-xl text-[var(--steel-900)] font-['Inter'] text-lg placeholder:text-[var(--steel-400)] focus:outline-none focus:bg-white transition-all duration-200 ${
                       errors.email 
                         ? 'border-[var(--status-danger)] bg-[var(--status-danger-bg)] focus:ring-2 focus:ring-[var(--status-danger-bg)]' 
                         : 'border-transparent focus:border-[var(--brand-accent)] focus:ring-2 focus:ring-[var(--brand-accent-muted)]'
@@ -167,23 +167,23 @@ const LoginPage = () => {
                   />
                 </div>
                 {errors.email && (
-                  <p className="mt-2 text-sm text-[var(--status-danger)] font-['DM_Sans']">{errors.email.message}</p>
+                  <p className="mt-4 text-base text-[var(--status-danger)] font-['Inter'] font-medium">{errors.email.message}</p>
                 )}
               </div>
 
               {/* Password Field */}
-              <div>
-                <label htmlFor="password" className="block text-sm font-medium text-[var(--steel-700)] mb-2 font-['DM_Sans']">
+              <div className="mt-12">
+                <label htmlFor="password" className="block text-lg font-semibold text-[var(--steel-700)] mb-4 font-['Inter'] tracking-wide">
                   Password <span className="text-[var(--status-danger)]">*</span>
                 </label>
                 <div className="relative">
-                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--steel-400)]" />
+                  <Lock className="absolute right-14 top-1/2 -translate-y-1/2 w-6 h-6 text-[var(--steel-400)]" />
                   <input
                     {...register('password')}
                     type={showPassword ? 'text' : 'password'}
                     id="password"
                     placeholder="Enter your password"
-                    className={`w-full pl-12 pr-14 py-3.5 bg-[var(--steel-50)] border-2 rounded-xl text-[var(--steel-900)] font-['DM_Sans'] placeholder:text-[var(--steel-400)] focus:outline-none focus:bg-white transition-all duration-200 ${
+                    className={`w-full pl-6 pr-22 py-5 bg-[var(--steel-50)] border-2 rounded-xl text-[var(--steel-900)] font-['Inter'] text-lg placeholder:text-[var(--steel-400)] focus:outline-none focus:bg-white transition-all duration-200 ${
                       errors.password 
                         ? 'border-[var(--status-danger)] bg-[var(--status-danger-bg)] focus:ring-2 focus:ring-[var(--status-danger-bg)]' 
                         : 'border-transparent focus:border-[var(--brand-accent)] focus:ring-2 focus:ring-[var(--brand-accent-muted)]'
@@ -192,13 +192,13 @@ const LoginPage = () => {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--steel-400)] hover:text-[var(--steel-600)] transition-colors"
+                    className="absolute right-5 top-1/2 -translate-y-1/2 text-[var(--steel-400)] hover:text-[var(--steel-600)] transition-colors"
                   >
-                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                    {showPassword ? <EyeOff className="w-6 h-6" /> : <Eye className="w-6 h-6" />}
                   </button>
                 </div>
                 {errors.password && (
-                  <p className="mt-2 text-sm text-[var(--status-danger)] font-['DM_Sans']">{errors.password.message}</p>
+                  <p className="mt-4 text-base text-[var(--status-danger)] font-['Inter'] font-medium">{errors.password.message}</p>
                 )}
               </div>
 
@@ -216,18 +216,18 @@ const LoginPage = () => {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="group w-full bg-gradient-to-r from-[#ff6b35] to-[#e85a2a] hover:from-[#ff8c5a] hover:to-[#ff6b35] text-white font-semibold py-4 px-6 rounded-xl transition-all duration-300 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2 font-['DM_Sans'] text-base"
+                className="group w-full bg-gradient-to-r from-[#ff6b35] to-[#e85a2a] hover:from-[#ff8c5a] hover:to-[#ff6b35] text-white font-bold py-6 px-8 rounded-xl transition-all duration-300 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-4 font-['Inter'] text-xl tracking-wide"
                 style={{ boxShadow: '0 4px 14px rgba(255, 107, 53, 0.4)' }}
               >
                 {isLoading ? (
                   <>
-                    <Loader2 className="w-5 h-5 animate-spin" />
+                    <Loader2 className="w-6 h-6 animate-spin" />
                     Signing in...
                   </>
                 ) : (
                   <>
                     Sign in
-                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                    <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
                   </>
                 )}
               </button>
@@ -235,18 +235,18 @@ const LoginPage = () => {
           </div>
 
           {/* Sign Up Link */}
-          <p className="text-center text-[var(--steel-500)] mt-8 font-['DM_Sans']">
+          <p className="text-center text-[var(--steel-500)] mt-12 font-['Inter'] text-lg tracking-wide">
             Don't have an account?{' '}
             <Link
               to="/signup"
-              className="text-[var(--brand-accent)] hover:text-[var(--brand-accent-hover)] font-semibold transition-colors"
+              className="text-[var(--brand-accent)] hover:text-[var(--brand-accent-hover)] font-bold transition-colors text-lg tracking-wide"
             >
               Create Account
             </Link>
           </p>
 
           {/* Footer */}
-          <p className="text-center text-sm text-[var(--steel-400)] mt-8 font-['DM_Sans']">
+          <p className="text-center text-base text-[var(--steel-400)] mt-12 font-['Inter'] tracking-wide">
             © {new Date().getFullYear()} GearGuard. Industrial Precision.
           </p>
         </div>

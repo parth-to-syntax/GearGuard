@@ -53,40 +53,40 @@ const MainLayout = ({ children }) => {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--surface-ground)] bg-industrial-grid">
+    <div className="h-screen flex flex-col bg-transparent overflow-hidden">
       {/* Top Navigation Bar */}
-      <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-[var(--border-subtle)]">
+      <header className="nav-dark shrink-0 border-b border-[var(--border-subtle)] z-50">
         <div className="mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
             {/* Logo */}
             <div className="flex items-center gap-3">
-              <div className="relative w-10 h-10 bg-gradient-to-br from-[#ff6b35] to-[#e85a2a] rounded-xl flex items-center justify-center shadow-lg" style={{ boxShadow: '0 4px 14px rgba(255, 107, 53, 0.35)' }}>
+              <div className="gg-logo-mark relative w-9 h-9 bg-gradient-to-br from-[var(--brand-accent)] to-[var(--brand-accent-hover)] rounded-xl flex items-center justify-center shadow-lg" style={{ boxShadow: '0 4px 14px rgba(59, 130, 246, 0.25)' }}>
                 <Wrench className="w-5 h-5 text-white" strokeWidth={2.5} />
                 <div className="absolute inset-0 rounded-xl bg-gradient-to-t from-black/10 to-white/20" />
               </div>
-              <span className="font-['Sora'] font-bold text-xl tracking-tight text-[var(--steel-900)]">
+              <span className="font-['Inter'] font-light text-lg tracking-tight text-white">
                 GearGuard
               </span>
             </div>
 
             {/* Navigation Tabs - Desktop */}
-            <nav className="hidden lg:flex items-center gap-1">
+            <nav className="hidden lg:flex items-center gap-2">
               {navigation.map((item) => (
                 <NavLink
                   key={item.name}
                   to={item.href}
                   className={({ isActive }) =>
-                    `group flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
+                    `group flex items-center gap-2 px-3.5 py-2 text-sm font-light rounded-md transition-all whitespace-nowrap ${
                       isActive
-                        ? 'bg-[var(--brand-accent-muted)] text-[var(--brand-accent)]'
-                        : 'text-[var(--steel-600)] hover:text-[var(--steel-900)] hover:bg-[var(--steel-100)]'
+                        ? 'text-primary font-medium'
+                        : 'text-secondary hover:text-primary'
                     }`
                   }
                 >
                   {({ isActive }) => (
                     <>
-                      <item.icon className={`w-4 h-4 transition-transform group-hover:scale-110 ${isActive ? 'text-[var(--brand-accent)]' : ''}`} />
-                      <span className="font-['DM_Sans']">{item.name}</span>
+                      <item.icon className="gg-nav-icon w-4 h-4" />
+                      <span>{item.name}</span>
                     </>
                   )}
                 </NavLink>
@@ -96,60 +96,60 @@ const MainLayout = ({ children }) => {
             {/* Mobile menu button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 text-[var(--steel-600)] hover:text-[var(--steel-900)] hover:bg-[var(--steel-100)] rounded-lg transition-colors"
+              className="lg:hidden p-2 text-secondary hover:text-primary hover:bg-[rgba(255,255,255,0.05)] rounded-lg transition-colors"
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
 
             {/* Right Section */}
-            <div className="hidden lg:flex items-center gap-2">
+            <div className="hidden lg:flex items-center gap-3">
               {/* Global Search */}
               <GlobalSearch />
 
               {/* Notifications */}
-              <button className="relative p-2.5 text-[var(--steel-500)] hover:text-[var(--steel-700)] hover:bg-[var(--steel-100)] rounded-xl transition-all duration-200 group">
-                <Bell className="w-5 h-5 group-hover:scale-110 transition-transform" />
-                <span className="absolute top-2 right-2 w-2 h-2 bg-[var(--brand-accent)] rounded-full ring-2 ring-white" />
+              <button className="relative p-1.5 text-secondary hover:text-primary rounded-lg transition-all">
+                <Bell className="w-5 h-5" />
+                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[var(--brand-accent)] rounded-full ring-2 ring-[var(--bg-dark-1)]" />
               </button>
 
-              {/* Theme Toggle */}
-              <button
-                onClick={toggleDarkMode}
-                className="p-2.5 text-[var(--steel-500)] hover:text-[var(--steel-700)] hover:bg-[var(--steel-100)] rounded-xl transition-all duration-200 group"
-              >
-                {isDarkMode ? (
-                  <Sun className="w-5 h-5 group-hover:scale-110 group-hover:rotate-45 transition-transform" />
-                ) : (
-                  <Moon className="w-5 h-5 group-hover:scale-110 transition-transform" />
-                )}
-              </button>
-
-              {/* Divider */}
-              <div className="w-px h-8 bg-[var(--border-default)] mx-2" />
+              {/* Theme Toggle - Hidden since we're in dark mode */}
+              {false && (
+                <button
+                  onClick={toggleDarkMode}
+                  className="p-2 text-secondary hover:text-primary rounded-lg transition-all"
+                >
+                  {isDarkMode ? (
+                    <Sun className="w-5 h-5" />
+                  ) : (
+                    <Moon className="w-5 h-5" />
+                  )}
+                </button>
+              )}
 
               {/* User Menu */}
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-[var(--steel-700)] to-[var(--steel-800)] rounded-xl flex items-center justify-center shadow-lg overflow-hidden">
+              <div className="gg-user-menu flex items-center gap-3">
+                <div className="w-9 h-9 bg-gradient-to-br from-[var(--brand-accent)] to-[var(--brand-accent-hover)] rounded-xl flex items-center justify-center shadow-lg overflow-hidden">
                   {user?.avatar ? (
                     <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
                   ) : (
-                    <span className="text-white text-sm font-semibold font-['Sora']">
+                    <span className="text-white text-sm font-semibold">
                       {user?.name?.charAt(0).toUpperCase()}
                     </span>
                   )}
                 </div>
                 <div className="hidden xl:block">
-                  <p className="text-sm font-semibold text-[var(--steel-900)] leading-tight font-['DM_Sans']">
+                  <p className="text-sm font-medium text-primary leading-tight">
                     {user?.name}
                   </p>
-                  <p className="text-xs text-[var(--steel-500)] capitalize font-['DM_Sans']">{user?.role?.toLowerCase()}</p>
+                  <p className="text-xs text-secondary capitalize">{user?.role?.toLowerCase()}</p>
                 </div>
                 <button
                   onClick={handleLogout}
-                  className="p-2.5 text-[var(--steel-400)] hover:text-[var(--status-danger)] hover:bg-[var(--status-danger-bg)] rounded-xl transition-all duration-200 group"
+                  className="gg-logout-btn lux-btn-primary flex items-center gap-2 px-3 py-1.5 text-sm"
                   title="Logout"
                 >
-                  <LogOut className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                  <LogOut className="w-4 h-4" />
+                  <span className="hidden md:inline">Logout</span>
                 </button>
               </div>
             </div>
@@ -158,7 +158,7 @@ const MainLayout = ({ children }) => {
 
         {/* Mobile Navigation */}
         {mobileMenuOpen && (
-          <div className="lg:hidden border-t border-[var(--border-subtle)] bg-white animate-slide-down">
+          <div className="lg:hidden backdrop-blur-md nav-dark animate-slide-down">
             <nav className="px-4 py-3 space-y-1">
               {navigation.map((item) => (
                 <NavLink
@@ -166,10 +166,10 @@ const MainLayout = ({ children }) => {
                   to={item.href}
                   onClick={() => setMobileMenuOpen(false)}
                   className={({ isActive }) =>
-                    `flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg transition-all ${
+                    `flex items-center gap-3 px-4 py-3 text-sm font-light rounded-lg transition-all ${
                       isActive
                         ? 'bg-[var(--brand-accent-muted)] text-[var(--brand-accent)]'
-                        : 'text-[var(--steel-600)] hover:bg-[var(--steel-100)]'
+                        : 'text-secondary hover:text-primary hover:bg-[rgba(255,255,255,0.05)]'
                     }`
                   }
                 >
@@ -178,21 +178,21 @@ const MainLayout = ({ children }) => {
                 </NavLink>
               ))}
             </nav>
-            <div className="px-4 py-3 border-t border-[var(--border-subtle)]">
+            <div className="px-4 py-3 border-t border-[var(--card-border)]">
               <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-[var(--steel-700)] to-[var(--steel-800)] rounded-xl flex items-center justify-center">
+                <div className="w-10 h-10 bg-gradient-to-br from-[var(--brand-accent)] to-[var(--brand-accent-hover)] rounded-xl flex items-center justify-center">
                   <span className="text-white text-sm font-semibold">
                     {user?.name?.charAt(0).toUpperCase()}
                   </span>
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-[var(--steel-900)]">{user?.name}</p>
-                  <p className="text-xs text-[var(--steel-500)] capitalize">{user?.role?.toLowerCase()}</p>
+                  <p className="text-sm font-medium text-primary">{user?.name}</p>
+                  <p className="text-xs text-secondary capitalize">{user?.role?.toLowerCase()}</p>
                 </div>
               </div>
               <button
                 onClick={handleLogout}
-                className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium text-[var(--status-danger)] bg-[var(--status-danger-bg)] rounded-lg hover:bg-red-100 transition-colors"
+                className="lux-btn-primary w-full flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium"
               >
                 <LogOut className="w-4 h-4" />
                 Sign Out
@@ -203,8 +203,8 @@ const MainLayout = ({ children }) => {
       </header>
 
       {/* Main Content */}
-      <main className="mx-auto px-4 sm:px-6 lg:px-8 py-8 max-w-[1600px]">
-        <div className="animate-fade-in">
+      <main className="flex-1 flex flex-col w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="animate-fade-in flex-1 flex flex-col">
           {children}
         </div>
       </main>
