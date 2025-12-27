@@ -1,0 +1,1432 @@
+{
+  "application": {
+    "name": "Maintenance Management System",
+    "description": "A comprehensive equipment maintenance tracking and management system",
+    "type": "Web Application"
+  },
+  "pages": [
+    {
+      "id": "login",
+      "name": "Login Page",
+      "route": "/login",
+      "layout": "centered",
+      "components": [
+        {
+          "type": "form",
+          "fields": [
+            {
+              "name": "email",
+              "label": "Email id",
+              "type": "text",
+              "required": true,
+              "validation": "email"
+            },
+            {
+              "name": "password",
+              "label": "Password",
+              "type": "password",
+              "required": true
+            }
+          ],
+          "actions": [
+            {
+              "type": "button",
+              "label": "Sign in",
+              "style": "primary",
+              "action": "submit"
+            }
+          ],
+          "links": [
+            {
+              "text": "Forget Password ?",
+              "route": "/forgot-password",
+              "style": "link"
+            },
+            {
+              "text": "Sign Up",
+              "route": "/signup",
+              "style": "link"
+            }
+          ]
+        }
+      ],
+      "validation": {
+        "loginCheck": "Check for login credentials",
+        "matchCredentials": "Match credentials and allow login",
+        "accountNotFound": "If email not found, show error 'Account not exist'",
+        "passwordMismatch": "If password doesn't match, show error 'Invalid Password'",
+        "signUpRedirect": "When clicked on SignUp, load SignUp page and only portal user will be created"
+      }
+    },
+    {
+      "id": "signup",
+      "name": "Sign Up Page",
+      "route": "/signup",
+      "layout": "centered",
+      "components": [
+        {
+          "type": "form",
+          "fields": [
+            {
+              "name": "name",
+              "label": "Name",
+              "type": "text",
+              "required": true
+            },
+            {
+              "name": "email",
+              "label": "Email id",
+              "type": "text",
+              "required": true,
+              "validation": "email"
+            },
+            {
+              "name": "password",
+              "label": "Password",
+              "type": "password",
+              "required": true,
+              "validation": "Must be unique and must contain a small case, a large case and a special character and length should be more than 8 characters"
+            },
+            {
+              "name": "confirmPassword",
+              "label": "Re-Enter password",
+              "type": "password",
+              "required": true,
+              "validation": "Must match password field"
+            }
+          ],
+          "actions": [
+            {
+              "type": "button",
+              "label": "Sign Up",
+              "style": "primary",
+              "action": "submit"
+            }
+          ]
+        }
+      ],
+      "validation": {
+        "createPortalUser": "Create a portal user database in the system on signup",
+        "checkCredentials": "Check credentials as follows",
+        "passwordRequirements": [
+          "Must be unique",
+          "Must contain a small case letter",
+          "Must contain a large case letter",
+          "Must contain a special character",
+          "Length should be more than 8 characters"
+        ],
+        "emailDuplicate": "Email must be unique and must not be a duplicate in database"
+      }
+    },
+    {
+      "id": "dashboard",
+      "name": "Dashboard",
+      "route": "/dashboard",
+      "layout": "full-width",
+      "navigation": {
+        "tabs": [
+          "Maintenance",
+          "Dashboard",
+          "Maintenance Calendar",
+          "Equipment",
+          "Reporting",
+          "Teams"
+        ],
+        "activeTab": "Dashboard"
+      },
+      "components": [
+        {
+          "type": "header",
+          "elements": [
+            {
+              "type": "button",
+              "label": "New",
+              "style": "primary",
+              "action": "createNewRequest"
+            },
+            {
+              "type": "search",
+              "placeholder": "Search...",
+              "width": "medium"
+            }
+          ]
+        },
+        {
+          "type": "kpiCards",
+          "cards": [
+            {
+              "id": "criticalEquipment",
+              "title": "Critical Equipment",
+              "value": "5 Units",
+              "subtitle": "(Health < 30%)",
+              "backgroundColor": "red",
+              "description": "Red background card displaying the count of at-risk machines. Helps managers identify assets that need immediate replacement or major overhaul."
+            },
+            {
+              "id": "technicianLoad",
+              "title": "Technician Load",
+              "value": "85% Utilized",
+              "subtitle": "(Assign Carefully)",
+              "backgroundColor": "blue",
+              "description": "Blue background card displaying workforce utilization percentage.",
+              "note": "In Equipment 2 option: 1. Work center, 2. Machine & Tools (where equipment is created)"
+            },
+            {
+              "id": "openRequests",
+              "title": "Open Requests",
+              "value": "12 Pending",
+              "subtitle": "3 Overdue",
+              "backgroundColor": "green",
+              "description": "Display the status where request are in."
+            }
+          ]
+        },
+        {
+          "type": "dataTable",
+          "title": "Maintenance Reports",
+          "description": "For requests to track the process",
+          "columns": [
+            {
+              "field": "subject",
+              "header": "Subject",
+              "width": "20%"
+            },
+            {
+              "field": "technicianName",
+              "header": "Technician Name",
+              "width": "15%"
+            },
+            {
+              "field": "equipment",
+              "header": "Equipment",
+              "width": "20%"
+            },
+            {
+              "field": "workcenter",
+              "header": "Workcenter",
+              "width": "15%"
+            },
+            {
+              "field": "company",
+              "header": "Company",
+              "width": "20%"
+            },
+            {
+              "field": "status",
+              "header": "Status",
+              "width": "10%",
+              "type": "badge"
+            }
+          ],
+          "sampleData": [
+            {
+              "subject": "Test activity",
+              "technicianName": "Mitchell Adam",
+              "equipment": "Acer Laptop/LP/2025/M2S912S",
+              "workcenter": "Computers",
+              "company": "My company",
+              "status": "New Request"
+            }
+          ],
+          "features": [
+            "Sortable columns",
+            "Filterable",
+            "Row click to view details"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "maintenanceRequest",
+      "name": "Maintenance Request Form",
+      "route": "/maintenance/new",
+      "layout": "centered-wide",
+      "requestTypes": [
+        {
+          "id": "equipment",
+          "label": "Equipment",
+          "description": "Request for equipment maintenance"
+        },
+        {
+          "id": "workCenter",
+          "label": "Work Center",
+          "description": "If work center is selected, instead of equipment field, there should be Work center field then one have to select specific work center where the request should be done"
+        }
+      ],
+      "components": [
+        {
+          "type": "form",
+          "sections": [
+            {
+              "title": "Request Details",
+              "fields": [
+                {
+                  "name": "subject",
+                  "label": "Subject",
+                  "type": "text",
+                  "required": true,
+                  "placeholder": "Test activity"
+                },
+                {
+                  "name": "createdBy",
+                  "label": "Created By",
+                  "type": "text",
+                  "readonly": true,
+                  "value": "Mitchell Adam"
+                },
+                {
+                  "name": "maintenanceFor",
+                  "label": "Maintenance For",
+                  "type": "select",
+                  "required": true,
+                  "options": "equipmentList",
+                  "description": "Selection of equipment which created in equipment model",
+                  "note": "Shows as dropdown: Acer Laptop/LP/2025/M2S912S"
+                },
+                {
+                  "name": "equipment",
+                  "label": "Equipment",
+                  "type": "display",
+                  "value": "Computers",
+                  "description": "Auto-populated from selected equipment"
+                },
+                {
+                  "name": "category",
+                  "label": "Category",
+                  "type": "display",
+                  "value": "12/18/2025"
+                },
+                {
+                  "name": "requestDate",
+                  "label": "Request Date?",
+                  "type": "date",
+                  "required": true
+                },
+                {
+                  "name": "maintenanceType",
+                  "label": "Maintenance Type",
+                  "type": "radio",
+                  "required": true,
+                  "options": [
+                    {
+                      "value": "corrective",
+                      "label": "Corrective",
+                      "selected": true
+                    },
+                    {
+                      "value": "preventive",
+                      "label": "Preventive"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "title": "Assignment",
+              "fields": [
+                {
+                  "name": "team",
+                  "label": "Team",
+                  "type": "select",
+                  "value": "Internal Maintenance"
+                },
+                {
+                  "name": "technician",
+                  "label": "Technician",
+                  "type": "select",
+                  "value": "Alex Foster"
+                },
+                {
+                  "name": "scheduledDate",
+                  "label": "Scheduled Date?",
+                  "type": "datetime",
+                  "value": "12/28/2025 14:30:00"
+                },
+                {
+                  "name": "duration",
+                  "label": "Duration",
+                  "type": "time",
+                  "value": "00:00 hours"
+                },
+                {
+                  "name": "priority",
+                  "label": "Priority",
+                  "type": "select",
+                  "options": ["Low", "Medium", "High"],
+                  "style": "diamond-selector"
+                },
+                {
+                  "name": "company",
+                  "label": "Company",
+                  "type": "select",
+                  "value": "My Company (San Francisco)"
+                }
+              ]
+            },
+            {
+              "title": "Notes",
+              "fields": [
+                {
+                  "name": "notes",
+                  "type": "textarea",
+                  "height": "large",
+                  "tabs": ["Notes", "Instructions"]
+                }
+              ]
+            }
+          ],
+          "statusIndicator": {
+            "type": "workflow",
+            "stages": [
+              {
+                "name": "New Request",
+                "state": "active"
+              },
+              {
+                "name": "In Progress",
+                "state": "inactive"
+              },
+              {
+                "name": "Reopened",
+                "state": "inactive"
+              },
+              {
+                "name": "Scrap",
+                "state": "inactive"
+              }
+            ],
+            "colorCoding": {
+              "inProgress": "blue",
+              "reopened": "yellow",
+              "readyForNextStage": "green"
+            }
+          },
+          "commentSection": {
+            "type": "comments",
+            "label": "Smart button that open the worksheet comment section"
+          }
+        }
+      ]
+    },
+    {
+      "id": "maintenanceCalendar",
+      "name": "Maintenance Calendar",
+      "route": "/maintenance/calendar",
+      "layout": "full-width",
+      "components": [
+        {
+          "type": "calendar",
+          "view": "week",
+          "timeRange": {
+            "start": "00:00",
+            "end": "24:00",
+            "interval": "30min"
+          },
+          "features": [
+            "Show scheduled requests",
+            "Color-coded by status",
+            "Click to view details",
+            "Drag to reschedule"
+          ],
+          "legend": [
+            {
+              "color": "red",
+              "label": "Overdue"
+            },
+            {
+              "color": "blue",
+              "label": "Scheduled"
+            },
+            {
+              "color": "green",
+              "label": "Completed"
+            }
+          ],
+          "miniCalendar": {
+            "position": "top-right",
+            "showMonth": true,
+            "highlightScheduledDays": true
+          }
+        }
+      ],
+      "note": "In calendar scheduled request should be shown"
+    },
+    {
+      "id": "equipment",
+      "name": "Equipment Module",
+      "route": "/equipment",
+      "subPages": [
+        {
+          "id": "equipmentForm",
+          "name": "Equipment Form",
+          "route": "/equipment/new",
+          "layout": "form-centered",
+          "components": [
+            {
+              "type": "form",
+              "title": "Equipment",
+              "autoNumbering": {
+                "enabled": true,
+                "pattern": "Sanitary Number 18",
+                "description": "Smart button that deleting this button opens a bar of currently created way to find specific number"
+              },
+              "sections": [
+                {
+                  "title": "Basic Information",
+                  "fields": [
+                    {
+                      "name": "name",
+                      "label": "Name?",
+                      "type": "text",
+                      "required": true
+                    },
+                    {
+                      "name": "equipmentCategory",
+                      "label": "Equipment Category?",
+                      "type": "select",
+                      "required": true,
+                      "options": "equipmentCategories"
+                    },
+                    {
+                      "name": "company",
+                      "label": "Company?",
+                      "type": "select",
+                      "required": true,
+                      "value": "My Company (San Francisco)"
+                    },
+                    {
+                      "name": "usedBy",
+                      "label": "Used By?",
+                      "type": "select",
+                      "options": "employees"
+                    },
+                    {
+                      "name": "maintenanceTeam",
+                      "label": "Maintenance Team?",
+                      "type": "select",
+                      "value": "Internal Maintenance"
+                    },
+                    {
+                      "name": "assignedDate",
+                      "label": "Assigned Date?",
+                      "type": "date",
+                      "value": "12/24/2025"
+                    }
+                  ]
+                },
+                {
+                  "title": "Technical Details",
+                  "fields": [
+                    {
+                      "name": "technician",
+                      "label": "Technician?",
+                      "type": "select",
+                      "value": "Mitchell Adam"
+                    },
+                    {
+                      "name": "employee",
+                      "label": "Employee?",
+                      "type": "select",
+                      "value": "Abigail Peterson"
+                    },
+                    {
+                      "name": "scrapDate",
+                      "label": "Scrap Date?",
+                      "type": "date"
+                    },
+                    {
+                      "name": "usedInLocation",
+                      "label": "Used in location?",
+                      "type": "text"
+                    },
+                    {
+                      "name": "workContact",
+                      "label": "Work Contact?",
+                      "type": "text"
+                    }
+                  ]
+                },
+                {
+                  "title": "Description",
+                  "fields": [
+                    {
+                      "name": "description",
+                      "type": "textarea",
+                      "height": "large"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "note": "Smart button field deleting this button opens a bar of currently related way to find specific number. Equipment form should be open like above."
+        },
+        {
+          "id": "equipmentList",
+          "name": "Equipment List",
+          "route": "/equipment/list",
+          "layout": "full-width",
+          "components": [
+            {
+              "type": "header",
+              "title": "Equipment List View",
+              "action": {
+                "type": "button",
+                "label": "New",
+                "route": "/equipment/new"
+              }
+            },
+            {
+              "type": "dataTable",
+              "columns": [
+                {
+                  "field": "equipmentName",
+                  "header": "Equipment Name",
+                  "width": "15%",
+                  "sortable": true
+                },
+                {
+                  "field": "employee",
+                  "header": "Employee",
+                  "width": "12%"
+                },
+                {
+                  "field": "department",
+                  "header": "Department",
+                  "width": "12%"
+                },
+                {
+                  "field": "serialNumber",
+                  "header": "Serial Number",
+                  "width": "15%"
+                },
+                {
+                  "field": "technician",
+                  "header": "Technician",
+                  "width": "12%"
+                },
+                {
+                  "field": "equipmentCategory",
+                  "header": "Equipment Category",
+                  "width": "15%"
+                },
+                {
+                  "field": "company",
+                  "header": "Company",
+                  "width": "19%"
+                }
+              ],
+              "sampleData": [
+                {
+                  "equipmentName": "Sanitary Number 18",
+                  "employee": "Tyra Neal",
+                  "department": "Admin",
+                  "serialNumber": "KT/054/22196337",
+                  "technician": "Mitchell Adam",
+                  "equipmentCategory": "Monitors",
+                  "company": "My Company (San Francisco)"
+                },
+                {
+                  "equipmentName": "Acer Laptop",
+                  "employee": "Hannah P",
+                  "department": "Technician",
+                  "serialNumber": "KT/054/11282222",
+                  "technician": "Marc Jason",
+                  "equipmentCategory": "Computers",
+                  "company": "My Company (San Francisco)"
+                }
+              ],
+              "features": [
+                "Row click opens equipment detail",
+                "Inline edit capability",
+                "Delete equipment option",
+                "Status indicators with stages of maintenance"
+              ],
+              "actions": {
+                "onRowClick": "openEquipmentForm",
+                "description": "On clicking on the list of equipment form should be open like above"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "equipmentCategories",
+      "name": "Equipment Categories",
+      "route": "/equipment/categories",
+      "layout": "modal",
+      "components": [
+        {
+          "type": "form",
+          "title": "Equipment Categories",
+          "description": "One can define Equipment Categories",
+          "sections": [
+            {
+              "title": "Category List",
+              "type": "table",
+              "columns": [
+                {
+                  "field": "name",
+                  "header": "Name",
+                  "width": "30%"
+                },
+                {
+                  "field": "responsible",
+                  "header": "Responsible",
+                  "width": "30%"
+                },
+                {
+                  "field": "company",
+                  "header": "Company",
+                  "width": "40%"
+                }
+              ],
+              "sampleData": [
+                {
+                  "name": "Computers",
+                  "responsible": "OdooBot",
+                  "company": "My Company (San Francisco)"
+                },
+                {
+                  "name": "Software",
+                  "responsible": "OdooBot",
+                  "company": "My Company (San Francisco)"
+                },
+                {
+                  "name": "Monitors",
+                  "responsible": "Mitchell Adam",
+                  "company": "My Company (San Francisco)"
+                }
+              ],
+              "actions": [
+                {
+                  "type": "button",
+                  "label": "Add Row",
+                  "action": "addCategory"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "workCenter",
+      "name": "Work Center",
+      "route": "/workcenter",
+      "layout": "full-width",
+      "note": "Must create a work center proper form view with respective field that are needed in work center for maintenance request",
+      "subPages": [
+        {
+          "id": "workCenterList",
+          "name": "Work Center List",
+          "route": "/workcenter",
+          "layout": "full-width",
+          "components": [
+            {
+              "type": "header",
+              "title": "Work Center List View",
+              "action": {
+                "type": "button",
+                "label": "New",
+                "route": "/workcenter/new"
+              }
+            },
+            {
+              "type": "dataTable",
+              "columns": [
+                {
+                  "field": "workCenter",
+                  "header": "Work Center",
+                  "width": "15%",
+                  "sortable": true
+                },
+                {
+                  "field": "code",
+                  "header": "Code",
+                  "width": "10%"
+                },
+                {
+                  "field": "tag",
+                  "header": "Tag",
+                  "width": "10%"
+                },
+                {
+                  "field": "alternativeWorkcenters",
+                  "header": "Alternative Workcenters",
+                  "width": "20%"
+                },
+                {
+                  "field": "costPerHour",
+                  "header": "Cost per hour",
+                  "width": "12%"
+                },
+                {
+                  "field": "capacityTimeEfficiency",
+                  "header": "Capacity Time Efficiency",
+                  "width": "18%"
+                },
+                {
+                  "field": "oeeTarget",
+                  "header": "OEE Target",
+                  "width": "15%"
+                }
+              ],
+              "sampleData": [
+                {
+                  "workCenter": "Assembly 1",
+                  "code": "",
+                  "tag": "",
+                  "alternativeWorkcenters": "",
+                  "costPerHour": "1.00 / 100.00",
+                  "capacityTimeEfficiency": "",
+                  "oeeTarget": "34.59"
+                },
+                {
+                  "workCenter": "Drill 1",
+                  "code": "",
+                  "tag": "",
+                  "alternativeWorkcenters": "",
+                  "costPerHour": "1.00 / 100.00",
+                  "capacityTimeEfficiency": "",
+                  "oeeTarget": "90.00"
+                }
+              ],
+              "features": [
+                "Row click opens work center detail",
+                "Sortable columns",
+                "Filterable"
+              ],
+              "actions": {
+                "onRowClick": "openWorkCenterForm"
+              }
+            }
+          ]
+        },
+        {
+          "id": "workCenterForm",
+          "name": "Work Center Form",
+          "route": "/workcenter/new",
+          "layout": "form-centered",
+          "components": [
+            {
+              "type": "form",
+              "title": "Work Center",
+              "sections": [
+                {
+                  "title": "Basic Information",
+                  "fields": [
+                    {
+                      "name": "workCenter",
+                      "label": "Work Center",
+                      "type": "text",
+                      "required": true
+                    },
+                    {
+                      "name": "code",
+                      "label": "Code",
+                      "type": "text"
+                    },
+                    {
+                      "name": "tag",
+                      "label": "Tag",
+                      "type": "text"
+                    },
+                    {
+                      "name": "alternativeWorkcenters",
+                      "label": "Alternative Workcenters",
+                      "type": "select",
+                      "multiple": true
+                    }
+                  ]
+                },
+                {
+                  "title": "Cost & Efficiency",
+                  "fields": [
+                    {
+                      "name": "costPerHour",
+                      "label": "Cost per hour",
+                      "type": "number"
+                    },
+                    {
+                      "name": "capacityTimeEfficiency",
+                      "label": "Capacity Time Efficiency",
+                      "type": "number"
+                    },
+                    {
+                      "name": "oeeTarget",
+                      "label": "OEE Target",
+                      "type": "number"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "teams",
+      "name": "Teams",
+      "route": "/teams",
+      "layout": "full-width",
+      "note": "Team member creation list view",
+      "subPages": [
+        {
+          "id": "teamsList",
+          "name": "Teams List",
+          "route": "/teams",
+          "layout": "full-width",
+          "components": [
+            {
+              "type": "header",
+              "title": "Teams",
+              "action": {
+                "type": "button",
+                "label": "New",
+                "route": "/teams/new"
+              }
+            },
+            {
+              "type": "dataTable",
+              "columns": [
+                {
+                  "field": "teamName",
+                  "header": "Team Name",
+                  "width": "40%",
+                  "sortable": true
+                },
+                {
+                  "field": "teamMembers",
+                  "header": "Team Members",
+                  "width": "30%"
+                },
+                {
+                  "field": "company",
+                  "header": "Company",
+                  "width": "30%"
+                }
+              ],
+              "sampleData": [
+                {
+                  "teamName": "Internal Maintenance",
+                  "teamMembers": "Anna Muller",
+                  "company": "My Company (San Francisco)"
+                },
+                {
+                  "teamName": "Hydrology",
+                  "teamMembers": "Marc Jason",
+                  "company": "My Company (San Francisco)"
+                },
+                {
+                  "teamName": "Subcontractor",
+                  "teamMembers": "Auggie Davidson",
+                  "company": "My Company (San Francisco)"
+                }
+              ],
+              "features": [
+                "Row click opens team detail",
+                "Sortable columns",
+                "Filterable"
+              ],
+              "actions": {
+                "onRowClick": "openTeamForm"
+              }
+            }
+          ]
+        },
+        {
+          "id": "teamForm",
+          "name": "Team Form",
+          "route": "/teams/new",
+          "layout": "form-centered",
+          "components": [
+            {
+              "type": "form",
+              "title": "Team",
+              "sections": [
+                {
+                  "title": "Team Information",
+                  "fields": [
+                    {
+                      "name": "teamName",
+                      "label": "Team Name",
+                      "type": "text",
+                      "required": true
+                    },
+                    {
+                      "name": "teamMembers",
+                      "label": "Team Members",
+                      "type": "select",
+                      "multiple": true,
+                      "options": "users"
+                    },
+                    {
+                      "name": "company",
+                      "label": "Company",
+                      "type": "select",
+                      "required": true
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "dataModels": {
+    "equipment": {
+      "fields": [
+        "name",
+        "equipmentCategory",
+        "company",
+        "usedBy",
+        "maintenanceTeam",
+        "assignedDate",
+        "technician",
+        "employee",
+        "scrapDate",
+        "usedInLocation",
+        "workContact",
+        "description",
+        "serialNumber",
+        "department"
+      ],
+      "relationships": [
+        {
+          "type": "belongsTo",
+          "model": "equipmentCategory"
+        },
+        {
+          "type": "belongsTo",
+          "model": "company"
+        }
+      ]
+    },
+    "company": {
+      "fields": [
+        "name",
+        "location"
+      ]
+    }
+  },
+  "designSystem": {
+    "colors": {
+      "primary": "#007bff",
+      "danger": "#dc3545",
+      "warning": "#ffc107",
+      "success": "#28a745",
+      "info": "#17a2b8",
+      "light": "#f8f9fa",
+      "dark": "#343a40"
+    },
+    "statusColors": {
+      "critical": "red",
+      "warning": "orange",
+      "normal": "blue",
+      "healthy": "green"
+    },
+    "cardStyles": {
+      "criticalEquipment": {
+        "backgroundColor": "red",
+        "textColor": "white"
+      },
+      "technicianLoad": {
+        "backgroundColor": "blue",
+        "textColor": "white"
+      },
+      "openRequests": {
+        "backgroundColor": "green",
+        "textColor": "white"
+      }
+    },
+    "typography": {
+      "fontFamily": "system-ui, -apple-system, sans-serif",
+      "headings": {
+        "h1": "2rem",
+        "h2": "1.5rem",
+        "h3": "1.25rem"
+      }
+    },
+    "spacing": {
+      "small": "8px",
+      "medium": "16px",
+      "large": "24px",
+      "xlarge": "32px"
+    },
+    "components": {
+      "button": {
+        "primary": {
+          "backgroundColor": "#007bff",
+          "color": "white",
+          "borderRadius": "4px",
+          "padding": "8px 16px"
+        },
+        "secondary": {
+          "backgroundColor": "transparent",
+          "color": "#007bff",
+          "border": "1px solid #007bff",
+          "borderRadius": "4px",
+          "padding": "8px 16px"
+        }
+      },
+      "form": {
+        "inputHeight": "38px",
+        "labelWeight": "500",
+        "borderColor": "#ced4da",
+        "borderRadius": "4px"
+      },
+      "table": {
+        "headerBackground": "#f8f9fa",
+        "rowHoverBackground": "#f1f3f5",
+        "borderColor": "#dee2e6"
+      }
+    }
+  },
+  "features": {
+    "authentication": {
+      "enabled": true,
+      "methods": ["email-password"],
+      "passwordRequirements": {
+        "minLength": 8,
+        "requireUppercase": true,
+        "requireLowercase": true,
+        "requireSpecialChar": true
+      }
+    },
+    "notifications": {
+      "enabled": true,
+      "types": ["success", "error", "warning", "info"]
+    },
+    "search": {
+      "enabled": true,
+      "scope": "global",
+      "entities": ["equipment", "maintenanceRequest", "workCenter"]
+    },
+    "export": {
+      "enabled": true,
+      "formats": ["CSV", "Excel", "PDF"]
+    },
+    "reporting": {
+      "enabled": true,
+      "dashboards": ["maintenance", "equipment", "technician"],
+      "reports": [
+        {
+          "name": "Equipment Health Report",
+          "description": "Shows equipment health status and maintenance history"
+        },
+        {
+          "name": "Technician Workload Report",
+          "description": "Displays technician utilization and task distribution"
+        },
+        {
+          "name": "Maintenance Cost Report",
+          "description": "Tracks maintenance costs by equipment and time period"
+        },
+        {
+          "name": "Downtime Analysis",
+          "description": "Analyzes equipment downtime and maintenance efficiency"
+        }
+      ]
+    }
+  },
+  "workflow": {
+    "maintenanceRequest": {
+      "stages": [
+        {
+          "name": "New Request",
+          "color": "gray",
+          "nextStages": ["In Progress"],
+          "actions": ["Assign technician", "Schedule"]
+        },
+        {
+          "name": "In Progress",
+          "color": "blue",
+          "nextStages": ["Reopened", "Completed"],
+          "actions": ["Update progress", "Add notes", "Request parts"]
+        },
+        {
+          "name": "Reopened",
+          "color": "yellow",
+          "nextStages": ["In Progress", "Scrap"],
+          "actions": ["Reassign", "Update priority"]
+        },
+        {
+          "name": "Completed",
+          "color": "green",
+          "nextStages": [],
+          "actions": ["Archive", "Generate report"]
+        },
+        {
+          "name": "Scrap",
+          "color": "red",
+          "nextStages": [],
+          "actions": ["Archive", "Generate report"]
+        }
+      ]
+    }
+  },
+  "permissions": {
+    "roles": {
+      "portal": {
+        "canView": ["own_requests"],
+        "canCreate": ["maintenance_request"],
+        "canEdit": ["own_requests"],
+        "canDelete": [],
+        "description": "Basic user who can only create and view their own requests"
+      },
+      "technician": {
+        "canView": ["assigned_requests", "equipment", "workCenter"],
+        "canCreate": ["maintenance_request"],
+        "canEdit": ["assigned_requests", "equipment_status"],
+        "canDelete": [],
+        "description": "Technician who can work on assigned requests and update equipment"
+      },
+      "manager": {
+        "canView": ["all_requests", "equipment", "workCenter", "teams", "reports"],
+        "canCreate": ["maintenance_request", "equipment", "workCenter", "teams"],
+        "canEdit": ["all_requests", "equipment", "workCenter", "teams"],
+        "canDelete": ["maintenance_request"],
+        "description": "Manager with full access to manage maintenance operations"
+      },
+      "admin": {
+        "canView": ["all"],
+        "canCreate": ["all"],
+        "canEdit": ["all"],
+        "canDelete": ["all"],
+        "description": "Administrator with full system access"
+      }
+    }
+  },
+  "apiEndpoints": {
+    "authentication": {
+      "login": {
+        "method": "POST",
+        "path": "/api/auth/login",
+        "body": ["email", "password"],
+        "response": ["token", "user"]
+      },
+      "signup": {
+        "method": "POST",
+        "path": "/api/auth/signup",
+        "body": ["name", "email", "password"],
+        "response": ["token", "user"]
+      },
+      "logout": {
+        "method": "POST",
+        "path": "/api/auth/logout",
+        "response": ["success"]
+      }
+    },
+    "maintenanceRequests": {
+      "list": {
+        "method": "GET",
+        "path": "/api/maintenance-requests",
+        "query": ["status", "technician", "dateRange", "page", "limit"]
+      },
+      "create": {
+        "method": "POST",
+        "path": "/api/maintenance-requests",
+        "body": ["subject", "requestType", "maintenanceFor", "requestDate", "maintenanceType", "team", "technician", "priority"]
+      },
+      "get": {
+        "method": "GET",
+        "path": "/api/maintenance-requests/:id"
+      },
+      "update": {
+        "method": "PUT",
+        "path": "/api/maintenance-requests/:id",
+        "body": ["any field"]
+      },
+      "delete": {
+        "method": "DELETE",
+        "path": "/api/maintenance-requests/:id"
+      },
+      "updateStatus": {
+        "method": "PATCH",
+        "path": "/api/maintenance-requests/:id/status",
+        "body": ["status"]
+      }
+    },
+    "equipment": {
+      "list": {
+        "method": "GET",
+        "path": "/api/equipment",
+        "query": ["category", "company", "status", "page", "limit"]
+      },
+      "create": {
+        "method": "POST",
+        "path": "/api/equipment",
+        "body": ["name", "equipmentCategory", "company", "usedBy", "maintenanceTeam"]
+      },
+      "get": {
+        "method": "GET",
+        "path": "/api/equipment/:id"
+      },
+      "update": {
+        "method": "PUT",
+        "path": "/api/equipment/:id"
+      },
+      "delete": {
+        "method": "DELETE",
+        "path": "/api/equipment/:id"
+      }
+    },
+    "equipmentCategories": {
+      "list": {
+        "method": "GET",
+        "path": "/api/equipment-categories"
+      },
+      "create": {
+        "method": "POST",
+        "path": "/api/equipment-categories",
+        "body": ["name", "responsible", "company"]
+      },
+      "update": {
+        "method": "PUT",
+        "path": "/api/equipment-categories/:id"
+      },
+      "delete": {
+        "method": "DELETE",
+        "path": "/api/equipment-categories/:id"
+      }
+    },
+    "workCenters": {
+      "list": {
+        "method": "GET",
+        "path": "/api/work-centers"
+      },
+      "create": {
+        "method": "POST",
+        "path": "/api/work-centers",
+        "body": ["workCenter", "code", "tag", "costPerHour"]
+      },
+      "get": {
+        "method": "GET",
+        "path": "/api/work-centers/:id"
+      },
+      "update": {
+        "method": "PUT",
+        "path": "/api/work-centers/:id"
+      },
+      "delete": {
+        "method": "DELETE",
+        "path": "/api/work-centers/:id"
+      }
+    },
+    "teams": {
+      "list": {
+        "method": "GET",
+        "path": "/api/teams"
+      },
+      "create": {
+        "method": "POST",
+        "path": "/api/teams",
+        "body": ["teamName", "teamMembers", "company"]
+      },
+      "get": {
+        "method": "GET",
+        "path": "/api/teams/:id"
+      },
+      "update": {
+        "method": "PUT",
+        "path": "/api/teams/:id"
+      },
+      "delete": {
+        "method": "DELETE",
+        "path": "/api/teams/:id"
+      }
+    },
+    "dashboard": {
+      "kpis": {
+        "method": "GET",
+        "path": "/api/dashboard/kpis",
+        "response": ["criticalEquipment", "technicianLoad", "openRequests"]
+      },
+      "recentRequests": {
+        "method": "GET",
+        "path": "/api/dashboard/recent-requests",
+        "query": ["limit"]
+      }
+    },
+    "calendar": {
+      "events": {
+        "method": "GET",
+        "path": "/api/calendar/events",
+        "query": ["startDate", "endDate"]
+      }
+    }
+  },
+  "integrations": {
+    "email": {
+      "enabled": true,
+      "triggers": [
+        "New request created",
+        "Request assigned to technician",
+        "Request status changed",
+        "Request overdue",
+        "Request completed"
+      ]
+    },
+    "calendar": {
+      "enabled": true,
+      "syncWith": ["Google Calendar", "Outlook Calendar"],
+      "features": ["Scheduled maintenance sync", "Technician availability"]
+    }
+  },
+  "validationRules": {
+    "maintenanceRequest": {
+      "subject": {
+        "required": true,
+        "minLength": 3,
+        "maxLength": 200
+      },
+      "requestDate": {
+        "required": true,
+        "minDate": "today"
+      },
+      "scheduledDate": {
+        "minDate": "requestDate"
+      },
+      "conditionalFields": {
+        "ifEquipmentType": {
+          "showFields": ["maintenanceFor", "equipment"],
+          "hideFields": ["workCenter"]
+        },
+        "ifWorkCenterType": {
+          "showFields": ["workCenter"],
+          "hideFields": ["maintenanceFor", "equipment"]
+        }
+      }
+    },
+    "equipment": {
+      "name": {
+        "required": true,
+        "unique": true
+      },
+      "equipmentCategory": {
+        "required": true
+      },
+      "company": {
+        "required": true
+      }
+    },
+    "user": {
+      "email": {
+        "required": true,
+        "format": "email",
+        "unique": true
+      },
+      "password": {
+        "required": true,
+        "minLength": 8,
+        "pattern": "^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])",
+        "message": "Password must contain at least one lowercase letter, one uppercase letter, and one special character"
+      }
+    }
+  }
+}

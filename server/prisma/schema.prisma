@@ -1,0 +1,403 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ==================== ENUMS ====================
+
+enum UserRole {
+  ADMIN
+  MANAGER
+  TECHNICIAN
+  REQUESTER
+}
+
+enum MaintenanceRequestStatus {
+  DRAFT
+  SUBMITTED
+  IN_REVIEW
+  APPROVED
+  IN_PROGRESS
+  ON_HOLD
+  COMPLETED
+  REOPENED
+  CANCELLED
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum RequestType {
+  BREAKDOWN
+  PREVENTIVE
+  CORRECTIVE
+  CALIBRATION
+  INSPECTION
+}
+
+enum EquipmentStatus {
+  OPERATIONAL
+  UNDER_MAINTENANCE
+  OUT_OF_SERVICE
+  DECOMMISSIONED
+}
+
+enum HealthStatus {
+  HEALTHY
+  WARNING
+  CRITICAL
+}
+
+// ==================== MODELS ====================
+
+model User {
+  id                  String   @id @default(uuid())
+  email               String   @unique
+  password            String
+  name                String
+  role                UserRole @default(REQUESTER)
+  phone               String?
+  avatar              String?
+  department          String?
+  isActive            Boolean  @default(true) @map("is_active")
+  resetToken          String?  @map("reset_token")
+  resetTokenExpiry    DateTime? @map("reset_token_expiry")
+  createdAt           DateTime @default(now()) @map("created_at")
+  updatedAt           DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  companyId           String?  @map("company_id")
+  company             Company? @relation(fields: [companyId], references: [id])
+  
+  teamId              String?  @map("team_id")
+  team                Team?    @relation(fields: [teamId], references: [id])
+  
+  // Maintenance requests created by this user
+  requestsCreated     MaintenanceRequest[] @relation("RequestCreator")
+  
+  // Maintenance requests assigned to this user (technician)
+  requestsAssigned    MaintenanceRequest[] @relation("RequestAssignee")
+  
+  // Work orders assigned
+  workOrders          WorkOrder[]
+  
+  // Comments made
+  comments            Comment[]
+  
+  // Activity logs
+  activities          ActivityLog[]
+
+  @@map("users")
+}
+
+model Company {
+  id          String   @id @default(uuid())
+  name        String
+  address     String?
+  phone       String?
+  email       String?
+  logo        String?
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  users       User[]
+  departments Department[]
+  equipment   Equipment[]
+
+  @@map("companies")
+}
+
+model Department {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  companyId   String   @map("company_id")
+  company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  equipment   Equipment[]
+  workCenters WorkCenter[]
+
+  @@map("departments")
+}
+
+model EquipmentCategory {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  icon        String?
+  parentId    String?  @map("parent_id")
+  parent      EquipmentCategory?  @relation("CategoryHierarchy", fields: [parentId], references: [id])
+  children    EquipmentCategory[] @relation("CategoryHierarchy")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  equipment   Equipment[]
+
+  @@map("equipment_categories")
+}
+
+model Equipment {
+  id                   String          @id @default(uuid())
+  name                 String
+  code                 String          @unique
+  description          String?
+  serialNumber         String?         @map("serial_number")
+  model                String?
+  manufacturer         String?
+  purchaseDate         DateTime?       @map("purchase_date")
+  warrantyExpiry       DateTime?       @map("warranty_expiry")
+  location             String?
+  status               EquipmentStatus @default(OPERATIONAL)
+  healthScore          Int             @default(100) @map("health_score")
+  healthStatus         HealthStatus    @default(HEALTHY) @map("health_status")
+  lastMaintenanceDate  DateTime?       @map("last_maintenance_date")
+  nextMaintenanceDate  DateTime?       @map("next_maintenance_date")
+  specifications       Json?
+  image                String?
+  // Decommission fields
+  decommissionedAt     DateTime?       @map("decommissioned_at")
+  decommissionedBy     String?         @map("decommissioned_by")
+  decommissionReason   String?         @map("decommission_reason")
+  decommissionNotes    String?         @map("decommission_notes")
+  disposalMethod       String?         @map("disposal_method")
+  createdAt            DateTime        @default(now()) @map("created_at")
+  updatedAt            DateTime        @updatedAt @map("updated_at")
+
+  // Relations
+  categoryId          String?         @map("category_id")
+  category            EquipmentCategory? @relation(fields: [categoryId], references: [id])
+  
+  departmentId        String?         @map("department_id")
+  department          Department?     @relation(fields: [departmentId], references: [id])
+  
+  companyId           String?         @map("company_id")
+  company             Company?        @relation(fields: [companyId], references: [id])
+  
+  workCenterId        String?         @map("work_center_id")
+  workCenter          WorkCenter?     @relation(fields: [workCenterId], references: [id])
+
+  // Maintenance requests for this equipment
+  maintenanceRequests MaintenanceRequest[]
+  
+  // Maintenance history
+  maintenanceHistory  MaintenanceHistory[]
+
+  @@map("equipment")
+}
+
+model WorkCenter {
+  id          String   @id @default(uuid())
+  name        String
+  code        String   @unique
+  description String?
+  location    String?
+  capacity    Int?
+  isActive    Boolean  @default(true) @map("is_active")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  departmentId String?    @map("department_id")
+  department   Department? @relation(fields: [departmentId], references: [id])
+  
+  equipment    Equipment[]
+  teams        Team[]
+  maintenanceRequests MaintenanceRequest[]
+
+  @@map("work_centers")
+}
+
+model Team {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  leaderId    String?  @map("leader_id")
+  isActive    Boolean  @default(true) @map("is_active")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  workCenterId String?     @map("work_center_id")
+  workCenter   WorkCenter? @relation(fields: [workCenterId], references: [id])
+  
+  members      User[]
+  maintenanceRequests MaintenanceRequest[]
+
+  @@map("teams")
+}
+
+model MaintenanceRequest {
+  id              String                   @id @default(uuid())
+  requestNumber   String                   @unique @map("request_number")
+  title           String
+  description     String
+  type            RequestType              @default(BREAKDOWN)
+  priority        Priority                 @default(MEDIUM)
+  status          MaintenanceRequestStatus @default(DRAFT)
+  
+  // Problem details
+  problemDetails  String?                  @map("problem_details")
+  rootCause       String?                  @map("root_cause")
+  resolution      String?
+  
+  // Dates
+  reportedDate    DateTime                 @default(now()) @map("reported_date")
+  scheduledDate   DateTime?                @map("scheduled_date")
+  startDate       DateTime?                @map("start_date")
+  completedDate   DateTime?                @map("completed_date")
+  dueDate         DateTime?                @map("due_date")
+  
+  // Time tracking
+  estimatedHours  Float?                   @map("estimated_hours")
+  actualHours     Float?                   @map("actual_hours")
+  
+  // Cost tracking
+  estimatedCost   Decimal?                 @map("estimated_cost") @db.Decimal(10, 2)
+  actualCost      Decimal?                 @map("actual_cost") @db.Decimal(10, 2)
+  
+  // Attachments
+  attachments     Json?
+  
+  createdAt       DateTime                 @default(now()) @map("created_at")
+  updatedAt       DateTime                 @updatedAt @map("updated_at")
+
+  // Relations
+  equipmentId     String                   @map("equipment_id")
+  equipment       Equipment                @relation(fields: [equipmentId], references: [id])
+  
+  createdById     String                   @map("created_by_id")
+  createdBy       User                     @relation("RequestCreator", fields: [createdById], references: [id])
+  
+  assignedToId    String?                  @map("assigned_to_id")
+  assignedTo      User?                    @relation("RequestAssignee", fields: [assignedToId], references: [id])
+  
+  workCenterId    String?                  @map("work_center_id")
+  workCenter      WorkCenter?              @relation(fields: [workCenterId], references: [id])
+  
+  teamId          String?                  @map("team_id")
+  team            Team?                    @relation(fields: [teamId], references: [id])
+  
+  // Related records
+  workOrders      WorkOrder[]
+  comments        Comment[]
+  activities      ActivityLog[]
+
+  @@map("maintenance_requests")
+}
+
+model WorkOrder {
+  id              String   @id @default(uuid())
+  orderNumber     String   @unique @map("order_number")
+  description     String?
+  instructions    String?
+  status          String   @default("PENDING")
+  priority        Priority @default(MEDIUM)
+  
+  scheduledDate   DateTime? @map("scheduled_date")
+  startDate       DateTime? @map("start_date")
+  completedDate   DateTime? @map("completed_date")
+  
+  estimatedHours  Float?   @map("estimated_hours")
+  actualHours     Float?   @map("actual_hours")
+  
+  partsUsed       Json?    @map("parts_used")
+  notes           String?
+  
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  maintenanceRequestId String           @map("maintenance_request_id")
+  maintenanceRequest   MaintenanceRequest @relation(fields: [maintenanceRequestId], references: [id], onDelete: Cascade)
+  
+  assignedToId         String?          @map("assigned_to_id")
+  assignedTo           User?            @relation(fields: [assignedToId], references: [id])
+
+  @@map("work_orders")
+}
+
+model MaintenanceHistory {
+  id              String   @id @default(uuid())
+  type            RequestType
+  description     String
+  performedDate   DateTime @map("performed_date")
+  performedBy     String?  @map("performed_by")
+  cost            Decimal? @db.Decimal(10, 2)
+  duration        Float?
+  notes           String?
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  // Relations
+  equipmentId     String    @map("equipment_id")
+  equipment       Equipment @relation(fields: [equipmentId], references: [id], onDelete: Cascade)
+
+  @@map("maintenance_history")
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  content   String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  userId               String             @map("user_id")
+  user                 User               @relation(fields: [userId], references: [id])
+  
+  maintenanceRequestId String             @map("maintenance_request_id")
+  maintenanceRequest   MaintenanceRequest @relation(fields: [maintenanceRequestId], references: [id], onDelete: Cascade)
+
+  @@map("comments")
+}
+
+model ActivityLog {
+  id          String   @id @default(uuid())
+  action      String
+  entityType  String   @map("entity_type")
+  entityId    String   @map("entity_id")
+  oldValue    Json?    @map("old_value")
+  newValue    Json?    @map("new_value")
+  description String?
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  // Relations
+  userId               String?            @map("user_id")
+  user                 User?              @relation(fields: [userId], references: [id])
+  
+  maintenanceRequestId String?            @map("maintenance_request_id")
+  maintenanceRequest   MaintenanceRequest? @relation(fields: [maintenanceRequestId], references: [id], onDelete: Cascade)
+
+  @@map("activity_logs")
+}
+
+model CalendarEvent {
+  id          String   @id @default(uuid())
+  title       String
+  description String?
+  eventType   String   @map("event_type")
+  startDate   DateTime @map("start_date")
+  endDate     DateTime @map("end_date")
+  allDay      Boolean  @default(false) @map("all_day")
+  color       String?
+  metadata    Json?
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("calendar_events")
+}
