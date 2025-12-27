@@ -90,7 +90,7 @@ export const getCategoryById = async (req, res) => {
 // Create category
 export const createCategory = async (req, res) => {
   try {
-    const { name, description, icon, parentId } = req.body;
+    const { name, description, icon, parentId, responsibleId } = req.body;
 
     // Validate parent exists if provided
     if (parentId) {
@@ -102,15 +102,29 @@ export const createCategory = async (req, res) => {
       }
     }
 
+    // Validate responsible user exists if provided
+    if (responsibleId) {
+      const responsible = await prisma.user.findUnique({
+        where: { id: responsibleId }
+      });
+      if (!responsible) {
+        return res.status(400).json({ message: 'Responsible user not found' });
+      }
+    }
+
     const category = await prisma.equipmentCategory.create({
       data: {
         name,
         description,
         icon,
-        parentId
+        parentId,
+        responsibleId
       },
       include: {
         parent: true,
+        responsible: {
+          select: { id: true, name: true, email: true }
+        },
         _count: {
           select: { equipment: true }
         }
@@ -131,7 +145,7 @@ export const createCategory = async (req, res) => {
 export const updateCategory = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, description, icon, parentId } = req.body;
+    const { name, description, icon, parentId, responsibleId } = req.body;
 
     // Check category exists
     const existing = await prisma.equipmentCategory.findUnique({
@@ -168,17 +182,31 @@ export const updateCategory = async (req, res) => {
       }
     }
 
+    // Validate responsible user exists if provided
+    if (responsibleId) {
+      const responsible = await prisma.user.findUnique({
+        where: { id: responsibleId }
+      });
+      if (!responsible) {
+        return res.status(400).json({ message: 'Responsible user not found' });
+      }
+    }
+
     const category = await prisma.equipmentCategory.update({
       where: { id },
       data: {
         name,
         description,
         icon,
-        parentId
+        parentId,
+        responsibleId
       },
       include: {
         parent: true,
         children: true,
+        responsible: {
+          select: { id: true, name: true, email: true }
+        },
         _count: {
           select: { equipment: true }
         }

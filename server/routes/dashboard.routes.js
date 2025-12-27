@@ -1,5 +1,5 @@
 import express from 'express';
-import { getKPIs, getRecentRequests, getStats } from '../controllers/dashboard.controller.js';
+import { getKPIs, getRecentRequests, getStats, getReports } from '../controllers/dashboard.controller.js';
 import { protect } from '../middleware/auth.middleware.js';
 
 const router = express.Router();
@@ -21,5 +21,10 @@ router.get('/recent-requests', getRecentRequests);
 // @desc    Get dashboard statistics
 // @access  Private
 router.get('/stats', getStats);
+
+// @route   GET /api/dashboard/reports
+// @desc    Get reports and analytics data
+// @access  Private
+router.get('/reports', getReports);
 
 export default router;

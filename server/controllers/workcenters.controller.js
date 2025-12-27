@@ -149,7 +149,21 @@ export const getWorkCenter = async (req, res) => {
 // Create new work center
 export const createWorkCenter = async (req, res) => {
   try {
-    const { name, code, description, location, capacity, departmentId, teamIds } = req.body;
+    const { 
+      name, 
+      code, 
+      description, 
+      location, 
+      capacity, 
+      departmentId, 
+      teamIds,
+      // New fields from design.json
+      tag,
+      costPerHour,
+      capacityTimeEfficiency,
+      oeeTarget,
+      alternativeWorkCenterIds
+    } = req.body;
 
     // Check if code already exists
     const existingCode = await prisma.workCenter.findUnique({
@@ -169,6 +183,11 @@ export const createWorkCenter = async (req, res) => {
         location,
         capacity: capacity ? parseInt(capacity) : null,
         departmentId,
+        // New fields
+        tag,
+        costPerHour: costPerHour ? parseFloat(costPerHour) : null,
+        capacityTimeEfficiency: capacityTimeEfficiency ? parseFloat(capacityTimeEfficiency) : null,
+        oeeTarget: oeeTarget ? parseFloat(oeeTarget) : null,
         teams: teamIds?.length > 0 ? {
           connect: teamIds.map(id => ({ id }))
         } : undefined
@@ -188,6 +207,17 @@ export const createWorkCenter = async (req, res) => {
         }
       }
     });
+
+    // Add alternative work centers if provided
+    if (alternativeWorkCenterIds?.length > 0) {
+      await prisma.workCenterAlternative.createMany({
+        data: alternativeWorkCenterIds.map((altId, index) => ({
+          primaryWorkCenterId: workCenter.id,
+          alternativeWorkCenterId: altId,
+          priority: index + 1
+        }))
+      });
+    }
 
     // Log activity
     await prisma.activityLog.create({
@@ -215,7 +245,22 @@ export const createWorkCenter = async (req, res) => {
 export const updateWorkCenter = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, code, description, location, capacity, departmentId, isActive, teamIds } = req.body;
+    const { 
+      name, 
+      code, 
+      description, 
+      location, 
+      capacity, 
+      departmentId, 
+      isActive, 
+      teamIds,
+      // New fields from design.json
+      tag,
+      costPerHour,
+      capacityTimeEfficiency,
+      oeeTarget,
+      alternativeWorkCenterIds
+    } = req.body;
 
     // Check if work center exists
     const existingWorkCenter = await prisma.workCenter.findUnique({
@@ -256,6 +301,11 @@ export const updateWorkCenter = async (req, res) => {
         capacity: capacity !== undefined ? (capacity ? parseInt(capacity) : null) : undefined,
         departmentId,
         isActive,
+        // New fields
+        tag,
+        costPerHour: costPerHour !== undefined ? (costPerHour ? parseFloat(costPerHour) : null) : undefined,
+        capacityTimeEfficiency: capacityTimeEfficiency !== undefined ? (capacityTimeEfficiency ? parseFloat(capacityTimeEfficiency) : null) : undefined,
+        oeeTarget: oeeTarget !== undefined ? (oeeTarget ? parseFloat(oeeTarget) : null) : undefined,
         ...teamsUpdate
       },
       include: {
@@ -273,6 +323,25 @@ export const updateWorkCenter = async (req, res) => {
         }
       }
     });
+
+    // Update alternative work centers if provided
+    if (alternativeWorkCenterIds !== undefined) {
+      // Remove existing alternatives
+      await prisma.workCenterAlternative.deleteMany({
+        where: { primaryWorkCenterId: id }
+      });
+      
+      // Add new alternatives
+      if (alternativeWorkCenterIds?.length > 0) {
+        await prisma.workCenterAlternative.createMany({
+          data: alternativeWorkCenterIds.map((altId, index) => ({
+            primaryWorkCenterId: id,
+            alternativeWorkCenterId: altId,
+            priority: index + 1
+          }))
+        });
+      }
+    }
 
     // Log activity
     await prisma.activityLog.create({

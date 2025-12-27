@@ -39,7 +39,27 @@ const MaintenanceList = () => {
     try {
       setLoading(true);
       const response = await api.get('/maintenance-requests/kanban');
-      setKanbanData(response.data.data);
+      const data = response.data.data;
+      
+      // Transform object-keyed data into array format for kanban columns
+      const columnConfig = [
+        { id: 'new', title: 'New Requests', statusKeys: ['SUBMITTED', 'PENDING'] },
+        { id: 'inProgress', title: 'In Progress', statusKeys: ['IN_PROGRESS', 'APPROVED'] },
+        { id: 'onHold', title: 'On Hold', statusKeys: ['ON_HOLD'] },
+        { id: 'completed', title: 'Completed', statusKeys: ['COMPLETED'] }
+      ];
+      
+      const transformedData = columnConfig.map(col => {
+        const requests = col.statusKeys.flatMap(status => data[status] || []);
+        return {
+          id: col.id,
+          title: col.title,
+          count: requests.length,
+          requests
+        };
+      });
+      
+      setKanbanData(transformedData);
     } catch (error) {
       console.error('Error fetching data:', error);
     } finally {

@@ -45,17 +45,42 @@ const workCenterValidation = [
     .isInt({ min: 0 })
     .withMessage('Capacity must be a positive number'),
   body('departmentId')
-    .optional()
+    .optional({ nullable: true })
     .isUUID()
     .withMessage('Invalid department ID'),
   body('teamIds')
-    .optional()
+    .optional({ nullable: true })
     .isArray()
     .withMessage('Team IDs must be an array'),
   body('teamIds.*')
     .optional()
     .isUUID()
-    .withMessage('Invalid team ID')
+    .withMessage('Invalid team ID'),
+  // New fields from design.json
+  body('tag')
+    .optional()
+    .isLength({ max: 50 })
+    .withMessage('Tag cannot exceed 50 characters'),
+  body('costPerHour')
+    .optional({ nullable: true })
+    .isDecimal({ decimal_digits: '0,2' })
+    .withMessage('Cost per hour must be a valid decimal'),
+  body('capacityTimeEfficiency')
+    .optional({ nullable: true })
+    .isFloat({ min: 0, max: 100 })
+    .withMessage('Capacity time efficiency must be between 0 and 100'),
+  body('oeeTarget')
+    .optional({ nullable: true })
+    .isFloat({ min: 0, max: 100 })
+    .withMessage('OEE target must be between 0 and 100'),
+  body('alternativeWorkCenterIds')
+    .optional({ nullable: true })
+    .isArray()
+    .withMessage('Alternative work center IDs must be an array'),
+  body('alternativeWorkCenterIds.*')
+    .optional()
+    .isUUID()
+    .withMessage('Invalid alternative work center ID')
 ];
 
 const updateValidation = [
@@ -82,7 +107,7 @@ const updateValidation = [
     .isInt({ min: 0 })
     .withMessage('Capacity must be a positive number'),
   body('departmentId')
-    .optional()
+    .optional({ nullable: true })
     .isUUID()
     .withMessage('Invalid department ID'),
   body('isActive')
@@ -90,13 +115,38 @@ const updateValidation = [
     .isBoolean()
     .withMessage('isActive must be a boolean'),
   body('teamIds')
-    .optional()
+    .optional({ nullable: true })
     .isArray()
     .withMessage('Team IDs must be an array'),
   body('teamIds.*')
     .optional()
     .isUUID()
-    .withMessage('Invalid team ID')
+    .withMessage('Invalid team ID'),
+  // New fields from design.json
+  body('tag')
+    .optional()
+    .isLength({ max: 50 })
+    .withMessage('Tag cannot exceed 50 characters'),
+  body('costPerHour')
+    .optional({ nullable: true })
+    .isDecimal({ decimal_digits: '0,2' })
+    .withMessage('Cost per hour must be a valid decimal'),
+  body('capacityTimeEfficiency')
+    .optional({ nullable: true })
+    .isFloat({ min: 0, max: 100 })
+    .withMessage('Capacity time efficiency must be between 0 and 100'),
+  body('oeeTarget')
+    .optional({ nullable: true })
+    .isFloat({ min: 0, max: 100 })
+    .withMessage('OEE target must be between 0 and 100'),
+  body('alternativeWorkCenterIds')
+    .optional({ nullable: true })
+    .isArray()
+    .withMessage('Alternative work center IDs must be an array'),
+  body('alternativeWorkCenterIds.*')
+    .optional()
+    .isUUID()
+    .withMessage('Invalid alternative work center ID')
 ];
 
 const idValidation = [

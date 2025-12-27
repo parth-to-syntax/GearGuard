@@ -97,6 +97,13 @@ model User {
   
   // Activity logs
   activities          ActivityLog[]
+  
+  // Equipment relations (from design.json)
+  usedEquipment       Equipment[] @relation("EquipmentUser")
+  defaultEquipment    Equipment[] @relation("EquipmentDefaultTechnician")
+  
+  // Categories this user is responsible for
+  responsibleCategories EquipmentCategory[]
 
   @@map("users")
 }
@@ -146,6 +153,10 @@ model EquipmentCategory {
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
 
+  // Responsible user for this category (from design.json)
+  responsibleId String? @map("responsible_id")
+  responsible   User?   @relation(fields: [responsibleId], references: [id])
+
   // Relations
   equipment   Equipment[]
 
@@ -178,6 +189,10 @@ model Equipment {
   disposalMethod       String?         @map("disposal_method")
   createdAt            DateTime        @default(now()) @map("created_at")
   updatedAt            DateTime        @updatedAt @map("updated_at")
+  
+  // Assignment fields (from design.json)
+  assignedDate         DateTime?       @map("assigned_date")
+  workContact          String?         @map("work_contact")
 
   // Relations
   categoryId          String?         @map("category_id")
@@ -191,6 +206,18 @@ model Equipment {
   
   workCenterId        String?         @map("work_center_id")
   workCenter          WorkCenter?     @relation(fields: [workCenterId], references: [id])
+  
+  // User who uses this equipment (from design.json)
+  usedById            String?         @map("used_by_id")
+  usedBy              User?           @relation("EquipmentUser", fields: [usedById], references: [id])
+  
+  // Default technician for this equipment (from design.json)
+  defaultTechnicianId String?         @map("default_technician_id")
+  defaultTechnician   User?           @relation("EquipmentDefaultTechnician", fields: [defaultTechnicianId], references: [id])
+  
+  // Maintenance team for this equipment (from design.json)
+  maintenanceTeamId   String?         @map("maintenance_team_id")
+  maintenanceTeam     Team?           @relation("EquipmentMaintenanceTeam", fields: [maintenanceTeamId], references: [id])
 
   // Maintenance requests for this equipment
   maintenanceRequests MaintenanceRequest[]
@@ -211,6 +238,12 @@ model WorkCenter {
   isActive    Boolean  @default(true) @map("is_active")
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
+  
+  // Additional fields (from design.json)
+  tag                     String?
+  costPerHour             Decimal?  @map("cost_per_hour") @db.Decimal(10, 2)
+  capacityTimeEfficiency  Float?    @map("capacity_time_efficiency")
+  oeeTarget               Float?    @map("oee_target")
 
   // Relations
   departmentId String?    @map("department_id")
@@ -219,8 +252,26 @@ model WorkCenter {
   equipment    Equipment[]
   teams        Team[]
   maintenanceRequests MaintenanceRequest[]
+  
+  // Alternative work centers (from design.json)
+  alternativeWorkCenters  WorkCenterAlternative[] @relation("PrimaryWorkCenter")
+  alternativeFor          WorkCenterAlternative[] @relation("AlternativeWorkCenter")
 
   @@map("work_centers")
+}
+
+// Junction table for alternative work centers (from design.json)
+model WorkCenterAlternative {
+  id                    String     @id @default(uuid())
+  primaryWorkCenterId   String     @map("primary_work_center_id")
+  primaryWorkCenter     WorkCenter @relation("PrimaryWorkCenter", fields: [primaryWorkCenterId], references: [id], onDelete: Cascade)
+  alternativeWorkCenterId String   @map("alternative_work_center_id")
+  alternativeWorkCenter   WorkCenter @relation("AlternativeWorkCenter", fields: [alternativeWorkCenterId], references: [id], onDelete: Cascade)
+  priority              Int        @default(1)
+  createdAt             DateTime   @default(now()) @map("created_at")
+
+  @@unique([primaryWorkCenterId, alternativeWorkCenterId])
+  @@map("work_center_alternatives")
 }
 
 model Team {
@@ -238,6 +289,9 @@ model Team {
   
   members      User[]
   maintenanceRequests MaintenanceRequest[]
+  
+  // Equipment this team is responsible for maintaining (from design.json)
+  maintainedEquipment Equipment[] @relation("EquipmentMaintenanceTeam")
 
   @@map("teams")
 }
@@ -278,8 +332,8 @@ model MaintenanceRequest {
   updatedAt       DateTime                 @updatedAt @map("updated_at")
 
   // Relations
-  equipmentId     String                   @map("equipment_id")
-  equipment       Equipment                @relation(fields: [equipmentId], references: [id])
+  equipmentId     String?                  @map("equipment_id")
+  equipment       Equipment?               @relation(fields: [equipmentId], references: [id])
   
   createdById     String                   @map("created_by_id")
   createdBy       User                     @relation("RequestCreator", fields: [createdById], references: [id])

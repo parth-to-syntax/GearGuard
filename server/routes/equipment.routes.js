@@ -61,17 +61,38 @@ const equipmentValidation = [
     .isIn(['OPERATIONAL', 'UNDER_MAINTENANCE', 'OUT_OF_SERVICE', 'DECOMMISSIONED'])
     .withMessage('Invalid status'),
   body('categoryId')
-    .optional()
+    .optional({ nullable: true })
     .isUUID()
     .withMessage('Invalid category ID'),
   body('workCenterId')
-    .optional()
+    .optional({ nullable: true })
     .isUUID()
     .withMessage('Invalid work center ID'),
   body('departmentId')
-    .optional()
+    .optional({ nullable: true })
     .isUUID()
-    .withMessage('Invalid department ID')
+    .withMessage('Invalid department ID'),
+  // New fields from design.json
+  body('usedById')
+    .optional({ nullable: true })
+    .isUUID()
+    .withMessage('Invalid user ID for usedBy'),
+  body('defaultTechnicianId')
+    .optional({ nullable: true })
+    .isUUID()
+    .withMessage('Invalid technician ID'),
+  body('maintenanceTeamId')
+    .optional({ nullable: true })
+    .isUUID()
+    .withMessage('Invalid maintenance team ID'),
+  body('assignedDate')
+    .optional({ nullable: true })
+    .isISO8601()
+    .withMessage('Invalid assigned date format'),
+  body('workContact')
+    .optional()
+    .isLength({ max: 200 })
+    .withMessage('Work contact cannot exceed 200 characters')
 ];
 
 const updateValidation = [
@@ -118,17 +139,38 @@ const updateValidation = [
     .isIn(['HEALTHY', 'WARNING', 'CRITICAL'])
     .withMessage('Invalid health status'),
   body('categoryId')
-    .optional()
+    .optional({ nullable: true })
     .isUUID()
     .withMessage('Invalid category ID'),
   body('workCenterId')
-    .optional()
+    .optional({ nullable: true })
     .isUUID()
     .withMessage('Invalid work center ID'),
   body('departmentId')
-    .optional()
+    .optional({ nullable: true })
     .isUUID()
-    .withMessage('Invalid department ID')
+    .withMessage('Invalid department ID'),
+  // New fields from design.json
+  body('usedById')
+    .optional({ nullable: true })
+    .isUUID()
+    .withMessage('Invalid user ID for usedBy'),
+  body('defaultTechnicianId')
+    .optional({ nullable: true })
+    .isUUID()
+    .withMessage('Invalid technician ID'),
+  body('maintenanceTeamId')
+    .optional({ nullable: true })
+    .isUUID()
+    .withMessage('Invalid maintenance team ID'),
+  body('assignedDate')
+    .optional({ nullable: true })
+    .isISO8601()
+    .withMessage('Invalid assigned date format'),
+  body('workContact')
+    .optional()
+    .isLength({ max: 200 })
+    .withMessage('Work contact cannot exceed 200 characters')
 ];
 
 const healthValidation = [

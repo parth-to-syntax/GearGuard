@@ -277,6 +277,183 @@ export const getStats = async (req, res) => {
   }
 };
 
+/**
+ * Get Reports Data
+ * @route GET /api/dashboard/reports
+ * @query {string} startDate - Start date for report range
+ * @query {string} endDate - End date for report range
+ * @query {string} reportType - Type of report (overview, equipment, team, workCenter)
+ * @query {string} workCenterId - Optional work center filter
+ * @query {string} teamId - Optional team filter
+ * @returns {Object} Report data based on type
+ */
+export const getReports = async (req, res) => {
+  try {
+    const { startDate, endDate, reportType, workCenterId, teamId } = req.query;
+    
+    const dateFilter = {};
+    if (startDate) dateFilter.gte = new Date(startDate);
+    if (endDate) dateFilter.lte = new Date(endDate);
+    
+    const whereClause = {};
+    if (Object.keys(dateFilter).length > 0) {
+      whereClause.reportedDate = dateFilter;
+    }
+    if (workCenterId) whereClause.workCenterId = workCenterId;
+    if (teamId) whereClause.teamId = teamId;
+
+    // Get all requests for the period
+    const requests = await prisma.maintenanceRequest.findMany({
+      where: whereClause,
+      include: {
+        equipment: {
+          select: { id: true, name: true, code: true }
+        },
+        assignedTo: {
+          select: { id: true, name: true, teamId: true }
+        },
+        workCenter: {
+          select: { id: true, name: true }
+        },
+        team: {
+          select: { id: true, name: true }
+        }
+      }
+    });
+
+    // Calculate overview stats
+    const totalRequests = requests.length;
+    const completedRequests = requests.filter(r => r.status === 'COMPLETED').length;
+    const pendingRequests = requests.filter(r => 
+      ['DRAFT', 'SUBMITTED', 'IN_REVIEW', 'APPROVED'].includes(r.status)
+    ).length;
+    const inProgressRequests = requests.filter(r => r.status === 'IN_PROGRESS').length;
+    const overdueRequests = requests.filter(r => 
+      r.dueDate && new Date(r.dueDate) < new Date() && 
+      !['COMPLETED', 'CANCELLED'].includes(r.status)
+    ).length;
+    
+    const preventiveCount = requests.filter(r => r.type === 'PREVENTIVE').length;
+    const correctiveCount = requests.filter(r => 
+      ['BREAKDOWN', 'CORRECTIVE'].includes(r.type)
+    ).length;
+    
+    // Calculate average completion time
+    const completedWithTime = requests.filter(r => 
+      r.status === 'COMPLETED' && r.actualHours
+    );
+    const avgCompletionTime = completedWithTime.length > 0
+      ? completedWithTime.reduce((sum, r) => sum + (r.actualHours || 0), 0) / completedWithTime.length
+      : 0;
+    
+    const completionRate = totalRequests > 0 
+      ? ((completedRequests / totalRequests) * 100).toFixed(1) 
+      : 0;
+
+    let reportData = {
+      totalRequests,
+      completedRequests,
+      pendingRequests,
+      inProgressRequests,
+      avgCompletionTime: parseFloat(avgCompletionTime.toFixed(1)),
+      completionRate: parseFloat(completionRate),
+      overdueRequests,
+      preventiveCount,
+      correctiveCount
+    };
+
+    // Add report-type specific data
+    if (reportType === 'equipment') {
+      // Group requests by equipment
+      const equipmentStats = {};
+      requests.forEach(r => {
+        if (r.equipment) {
+          const key = r.equipment.id;
+          if (!equipmentStats[key]) {
+            equipmentStats[key] = {
+              name: r.equipment.name,
+              requests: 0,
+              downtime: 0
+            };
+          }
+          equipmentStats[key].requests++;
+          equipmentStats[key].downtime += r.actualHours || 0;
+        }
+      });
+      
+      reportData.topEquipmentByRequests = Object.values(equipmentStats)
+        .sort((a, b) => b.requests - a.requests)
+        .slice(0, 10);
+    }
+
+    if (reportType === 'team') {
+      // Group requests by team/technician
+      const teamStats = {};
+      requests.forEach(r => {
+        if (r.team) {
+          const key = r.team.id;
+          if (!teamStats[key]) {
+            teamStats[key] = {
+              name: r.team.name,
+              completed: 0,
+              total: 0,
+              totalTime: 0
+            };
+          }
+          teamStats[key].total++;
+          if (r.status === 'COMPLETED') {
+            teamStats[key].completed++;
+            teamStats[key].totalTime += r.actualHours || 0;
+          }
+        }
+      });
+      
+      reportData.teamPerformance = Object.values(teamStats).map(t => ({
+        name: t.name,
+        completed: t.completed,
+        avgTime: t.completed > 0 ? parseFloat((t.totalTime / t.completed).toFixed(1)) : 0,
+        rating: t.total > 0 ? parseFloat(((t.completed / t.total) * 5).toFixed(1)) : 0
+      }));
+    }
+
+    if (reportType === 'workCenter') {
+      // Group requests by work center
+      const wcStats = {};
+      requests.forEach(r => {
+        if (r.workCenter) {
+          const key = r.workCenter.id;
+          if (!wcStats[key]) {
+            wcStats[key] = {
+              name: r.workCenter.name,
+              total: 0,
+              completed: 0,
+              pending: 0
+            };
+          }
+          wcStats[key].total++;
+          if (r.status === 'COMPLETED') wcStats[key].completed++;
+          if (['DRAFT', 'SUBMITTED', 'IN_REVIEW', 'APPROVED', 'IN_PROGRESS'].includes(r.status)) {
+            wcStats[key].pending++;
+          }
+        }
+      });
+      
+      reportData.workCenterStats = Object.values(wcStats);
+    }
+
+    res.json({
+      success: true,
+      data: reportData
+    });
+  } catch (error) {
+    console.error('Error fetching reports:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Failed to fetch report data' 
+    });
+  }
+};
+
 // Helper function to format status for display
 function formatStatus(status) {
   const statusMap = {

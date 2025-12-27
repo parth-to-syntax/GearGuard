@@ -28,8 +28,12 @@ const categoryValidation = [
     .optional()
     .trim(),
   body('parentId')
-    .optional()
-    .isUUID().withMessage('Invalid parent category ID')
+    .optional({ nullable: true })
+    .isUUID().withMessage('Invalid parent category ID'),
+  // New field from design.json
+  body('responsibleId')
+    .optional({ nullable: true })
+    .isUUID().withMessage('Invalid responsible user ID')
 ];
 
 const idValidation = [

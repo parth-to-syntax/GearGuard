@@ -121,13 +121,13 @@ export const getEquipmentById = async (req, res) => {
         },
         maintenanceHistory: {
           take: 10,
-          orderBy: { performedAt: 'desc' },
+          orderBy: { performedDate: 'desc' },
           select: {
             id: true,
             type: true,
             description: true,
-            performedAt: true,
-            hoursSpent: true,
+            performedDate: true,
+            duration: true,
             cost: true
           }
         },
@@ -175,7 +175,13 @@ export const createEquipment = async (req, res) => {
       categoryId,
       workCenterId,
       departmentId,
-      specifications
+      specifications,
+      // New fields from design.json
+      usedById,
+      defaultTechnicianId,
+      maintenanceTeamId,
+      assignedDate,
+      workContact
     } = req.body;
 
     // Check if code already exists
@@ -203,7 +209,13 @@ export const createEquipment = async (req, res) => {
         categoryId,
         workCenterId,
         departmentId,
-        specifications: specifications ? JSON.parse(specifications) : null
+        specifications: specifications ? JSON.parse(specifications) : null,
+        // New fields
+        usedById,
+        defaultTechnicianId,
+        maintenanceTeamId,
+        assignedDate: assignedDate ? new Date(assignedDate) : null,
+        workContact
       },
       include: {
         category: {
@@ -213,6 +225,15 @@ export const createEquipment = async (req, res) => {
           select: { id: true, name: true, code: true }
         },
         department: {
+          select: { id: true, name: true }
+        },
+        usedBy: {
+          select: { id: true, name: true, email: true }
+        },
+        defaultTechnician: {
+          select: { id: true, name: true, email: true }
+        },
+        maintenanceTeam: {
           select: { id: true, name: true }
         }
       }
@@ -260,7 +281,13 @@ export const updateEquipment = async (req, res) => {
       categoryId,
       workCenterId,
       departmentId,
-      specifications
+      specifications,
+      // New fields from design.json
+      usedById,
+      defaultTechnicianId,
+      maintenanceTeamId,
+      assignedDate,
+      workContact
     } = req.body;
 
     // Check if equipment exists
@@ -302,7 +329,13 @@ export const updateEquipment = async (req, res) => {
         categoryId,
         workCenterId,
         departmentId,
-        specifications: specifications ? JSON.parse(specifications) : undefined
+        specifications: specifications ? JSON.parse(specifications) : undefined,
+        // New fields
+        usedById,
+        defaultTechnicianId,
+        maintenanceTeamId,
+        assignedDate: assignedDate ? new Date(assignedDate) : undefined,
+        workContact
       },
       include: {
         category: {
@@ -312,6 +345,15 @@ export const updateEquipment = async (req, res) => {
           select: { id: true, name: true, code: true }
         },
         department: {
+          select: { id: true, name: true }
+        },
+        usedBy: {
+          select: { id: true, name: true, email: true }
+        },
+        defaultTechnician: {
+          select: { id: true, name: true, email: true }
+        },
+        maintenanceTeam: {
           select: { id: true, name: true }
         }
       }
@@ -421,7 +463,7 @@ export const getEquipmentStats = async (req, res) => {
         maintenanceHistory: {
           select: {
             type: true,
-            hoursSpent: true,
+            duration: true,
             cost: true
           }
         }
@@ -443,7 +485,7 @@ export const getEquipmentStats = async (req, res) => {
         r.priority === 'CRITICAL' && r.status !== 'COMPLETED'
       ).length,
       totalHoursSpent: equipment.maintenanceRequests.reduce((sum, r) => sum + (r.actualHours || 0), 0) +
-        equipment.maintenanceHistory.reduce((sum, h) => sum + (h.hoursSpent || 0), 0),
+        equipment.maintenanceHistory.reduce((sum, h) => sum + (h.duration || 0), 0),
       totalCost: equipment.maintenanceRequests.reduce((sum, r) => sum + (r.actualCost || 0), 0) +
         equipment.maintenanceHistory.reduce((sum, h) => sum + (h.cost || 0), 0),
       maintenanceRecords: equipment.maintenanceHistory.length
